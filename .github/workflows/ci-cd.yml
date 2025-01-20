@@ -1,0 +1,54 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Start Server and Wait
+        run: |
+          npm run dev & sleep 10
+        timeout-minutes: 5
+
+      - name: Run Unit Tests
+        run: npm test -- --coverage
+
+      - name: Run Integration Tests
+        run: npm run test:integration
+
+      - name: Run End-to-End Tests
+        run: npm run test:e2e
+
+      - name: Upload Test Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Stop Server
+        if: always()
+        run: pkill -f "npm run dev"
+
+      - name: Stop Server
+        if: always()
+        run: pkill -f "npm run dev"
