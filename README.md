@@ -74,12 +74,12 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 
 | Release     | Sprint        | Description                         | Duration       |
 |-------------|--------------|-------------------------------------|----------------|
-| Release 1   | Sprint 1      | Requirements gathering & planning  | Jan. 13 - Jan. 26         |
-|             | Sprint 2      | Initial prototyping & UI design    | Jan. 27 - Feb. 09     |
-| Release 2   | Sprint 3      | Backend setup & API integrations  | Feb. 10 - Feb. 23      |
-|             | Sprint 4      | Core feature implementation        | Feb. 24 - Mar. 09     |
-| Release 3   | Sprint 5      | Testing & bug fixes                | Mar. 10 - Mar. 23      |
-|             | Sprint 6      | Performance optimization           | Mar. 24 - Apr. 06        |
+| Release 1   | Sprint 1      |   | Jan. 13 - Jan. 26         |
+|             | Sprint 2      |    | Jan. 27 - Feb. 09     |
+| Release 2   | Sprint 3      |  | Feb. 10 - Feb. 23      |
+|             | Sprint 4      |        | Feb. 24 - Mar. 09     |
+| Release 3   | Sprint 5      |                | Mar. 10 - Mar. 23      |
+|             | Sprint 6      |           | Mar. 24 - Apr. 06        |
 
 
 ## 🧑‍💻 Team Members
