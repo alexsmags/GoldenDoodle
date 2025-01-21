@@ -76,9 +76,10 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
    ```bash
    npm install -g expo-cli
    ```
-2. Change to `expo-app` directory
+2. Change to `expo-app` directory and install dependencies
    ```bash
    cd .\expo-app\
+   npm install
    ```
    (From the root directory)
 
