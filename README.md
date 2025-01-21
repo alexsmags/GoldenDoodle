@@ -78,7 +78,7 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
    ```
 2. Start the Expo development server
    ```bash
-   expo start
+   npx expo start
    ```
 3. Download the Expo Go app on your mobile device from the App Store or Google Play.
 
