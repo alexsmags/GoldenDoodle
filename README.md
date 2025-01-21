@@ -91,7 +91,7 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 | Anthony Anania    | N/A   | N/A  |
 | Brandon Toledano    | N/A     | N/A  |
 | Desire Ouattara    | N/A     | N/A  |
-| Gabriel Derhy    | N/A     | N/A  |
+| Gabriel Derhy    | N/A     | gabrielderhy@gmail.com  |
 | Jonathan Della Penta    | N/A     | N/A  |
 | Patrick Fuoco    | N/A     | N/A  |
 | Seth Hains   | N/A     | N/A  |
