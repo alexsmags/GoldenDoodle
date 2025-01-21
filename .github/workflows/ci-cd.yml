@@ -19,16 +19,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build
+      - name: Expo Login
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: expo login --non-interactive -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
 
-      - name: Start Server and Wait
+      - name: Build Expo Project
+        run: expo build:web
+
+      - name: Start Expo Server and Wait
         run: |
-          npm run dev & sleep 10
+          npx expo start --web &
+          sleep 20
         timeout-minutes: 5
 
       - name: Run Unit Tests
@@ -40,15 +50,6 @@ jobs:
       - name: Run End-to-End Tests
         run: npm run test:e2e
 
-      - name: Upload Test Coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Stop Server
+      - name: Stop Expo Server
         if: always()
-        run: pkill -f "npm run dev"
-
-      - name: Stop Server
-        if: always()
-        run: pkill -f "npm run dev"
+        run: pkill -f "expo start"
