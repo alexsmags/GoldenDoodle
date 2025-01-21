@@ -31,9 +31,6 @@ jobs:
         run: npm install
         working-directory: expo-app
 
-      - name: Build Expo Project
-        run: expo build:web
-
       - name: Start Expo Server and Wait
         run: |
           npx expo start --web &
