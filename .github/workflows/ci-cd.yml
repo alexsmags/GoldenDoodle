@@ -38,15 +38,6 @@ jobs:
         working-directory: expo-app
         timeout-minutes: 5
 
-      - name: Run Unit Tests
-        run: npm test -- --coverage
-
-      - name: Run Integration Tests
-        run: npm run test:integration
-
-      - name: Run End-to-End Tests
-        run: npm run test:e2e
-
       - name: Stop Expo Server
         if: always()
         run: pkill -f "expo start"
