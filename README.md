@@ -60,15 +60,7 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
    ```bash
    git clone https://github.com/alexsmags/GoldenDoodle
 
-2. Install dependencies:
-   ```bash
-   npm install
-
-3. Configure the API keys in the `.env` file
-
-4. Start the application
-   ```bash
-   npm run dev
+2. Configure the API keys in the `.env` file (if necessary)
 
 ### Running the Expo App
 
