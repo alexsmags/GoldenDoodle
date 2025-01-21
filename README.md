@@ -110,6 +110,24 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
    ```
 
 
+### Running the Expo App
+
+1. Install the Expo CLI globally on your machine (if not already installed):
+   ```bash
+   npm install -g expo-cli
+   ```
+2. Start the Expo development server
+   ```bash
+   expo start
+   ```
+3. Download the Expo Go app on your mobile device from the App Store or Google Play.
+
+4. Connect your device and development machine to the same Wi-Fi network.
+
+5. Scan the QR code displayed in the terminal or Expo Developer Tools using the Expo Go app.
+
+6. The app will load on your device, allowing you to test it in real-time.
+
 ## 📅 Project Timeline
 
 | Release     | Sprint        | Description                         | Duration       |
