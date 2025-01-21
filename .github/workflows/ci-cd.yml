@@ -23,15 +23,13 @@ jobs:
           cache-dependency-path: expo-app/package-lock.json
 
       - name: Install Expo CLI
-        run: npm install -g expo-cli
+        run: npm install expo-cli
+        working-directory: expo-app
+
 
       - name: Install dependencies
         run: npm install
-
-      - name: Expo Login
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: expo login --non-interactive -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+        working-directory: expo-app
 
       - name: Build Expo Project
         run: expo build:web
@@ -40,6 +38,7 @@ jobs:
         run: |
           npx expo start --web &
           sleep 20
+        working-directory: expo-app
         timeout-minutes: 5
 
       - name: Run Unit Tests
