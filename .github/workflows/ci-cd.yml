@@ -31,6 +31,18 @@ jobs:
         run: npm install
         working-directory: expo-app
 
+      - name: Run Jest Tests with Coverage
+        run: npx jest --coverage --ci
+        working-directory: expo-app
+
+      - name: Upload Coverage Report to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: expo-app/coverage/lcov.info
+          fail_ci_if_error: true
+          verbose: true
+
       - name: Start Expo Server and Wait
         run: |
           npx expo start --web &
