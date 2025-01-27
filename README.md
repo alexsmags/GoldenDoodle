@@ -110,7 +110,7 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 | Desire Ouattara    | N/A     | N/A  |
 | Gabriel Derhy    | N/A     | gabrielderhy@gmail.com  |
 | Jonathan Della Penta    | N/A     | N/A  |
-| Patrick Fuoco    | N/A     | N/A  |
+| Patrick Fuoco    | N/A     | pfuoco01@gmail.com  |
 | Seth Hains   | N/A     | N/A  |
 | Steven Zrihen    | N/A     | N/A  |
 
