@@ -87,6 +87,30 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 
 7. The app will load on your device, allowing you to test it in real-time.
 
+
+### Running the ExpressJS backend server
+
+1. Change to backend directory
+   ```bash
+   cd .\backend\
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Run server:
+   ```bash
+   npm run start
+   ```
+
+   or in dev mode:
+   ```bash
+   npm run dev
+   ```
+
+
 ## 📅 Project Timeline
 
 | Release     | Sprint        | Description                         | Duration       |
