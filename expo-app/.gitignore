@@ -36,3 +36,13 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+
+# .env files --> .env template is used to show what should be kept in the .env file
+.env
+
+# firebase config
+/app/services/firebase/firebaseConfig.ts
+
+# Google Platform Config 
+/app/hooks/googlePlatformConfig.ts
