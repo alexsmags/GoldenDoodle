@@ -9,8 +9,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function useGoogleSignIn() {
 
-  console.log("sd", GOOGLE_WEB_CLIENT_ID);
-
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: GOOGLE_WEB_CLIENT_ID ,
     webClientId: GOOGLE_WEB_CLIENT_ID,
