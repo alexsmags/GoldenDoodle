@@ -46,3 +46,4 @@ app-example
 
 # Google Platform Config 
 /app/hooks/googlePlatformConfig.ts
+app/hooks/client_secret.json

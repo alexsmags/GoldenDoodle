@@ -11,7 +11,7 @@ export default function ProfileScreen() {
     auth.signOut();
     router.push('/');
   };
-
+  
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       {user ? (

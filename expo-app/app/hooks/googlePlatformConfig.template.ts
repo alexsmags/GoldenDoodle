@@ -5,3 +5,5 @@
 // Copy the content of this file to a new file called googlePlatformConfig.ts
 
 export const GOOGLE_WEB_CLIENT_ID = ""; // Add your Google Web Client ID here (Google Platform)
+export const GOOGLE_CLIENT_ID = ""; // Add your Google  Client ID here (Google Platform) (LIKELY SAME AS GOOGLE_WEB_CLIENT_ID)
+export const GOOGLE_CLIENT_SECRET = ""; // Add your Google Client Secret here (Google Platform)
