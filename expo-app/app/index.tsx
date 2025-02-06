@@ -6,14 +6,14 @@ import useGoogleSignIn from "./hooks/useGoogleSignIn";
 import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
-  const { user, loading, signIn } = useGoogleSignIn();
+  const { user, loading, signIn, accessToken } = useGoogleSignIn();
   const router = useRouter();
 
-  useEffect(() => {
-    if (user) {
-      router.push("/profile");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     router.push("/auth/profile");
+  //   }
+  // }, [user]);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

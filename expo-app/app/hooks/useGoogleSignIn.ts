@@ -16,10 +16,10 @@ export default function useGoogleSignIn() {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const redirectUri = makeRedirectUri({
-    scheme: "myapp", // Must match "scheme" in app.json
-    path: "auth",
-  });
+  // const redirectUri = makeRedirectUri({
+  //   scheme: "myapp", // Must match "scheme" in app.json
+  //   path: "auth/profile",
+  // });
 
   const discovery = {
     authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
@@ -32,7 +32,7 @@ export default function useGoogleSignIn() {
     {
       clientId: GOOGLE_CLIENT_ID,
       // clientSecret: GOOGLE_CLIENT_SECRET,
-      redirectUri,
+      redirectUri: "http://localhost:8081/auth/profile",
       scopes: [
         "openid",
         "profile",
@@ -56,7 +56,7 @@ export default function useGoogleSignIn() {
               code: response.params.code,
               client_id: GOOGLE_CLIENT_ID,
               client_secret: GOOGLE_CLIENT_SECRET,
-              redirect_uri: redirectUri,
+              redirect_uri: "http://localhost:8081/auth/profile",
               grant_type: "authorization_code",
             }).toString(),
           });

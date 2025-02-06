@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, Alert } from "react-native";
 import { auth } from "../services/firebase/firebase";
 import { useRouter } from "expo-router";
 
@@ -9,9 +9,9 @@ export default function ProfileScreen() {
 
   const handleLogout = () => {
     auth.signOut();
-    router.push('/');
+    router.push("/");
   };
-  
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       {user ? (
