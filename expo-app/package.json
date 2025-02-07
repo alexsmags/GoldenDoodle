@@ -16,7 +16,12 @@
     "collectCoverage": true,
     "coverageDirectory": "coverage",
     "coverageReporters": ["json", "lcov", "text", "clover"],
-    "collectCoverageFrom": ["expo-app/src/**/*.{js,jsx,ts,tsx}"]
+    "collectCoverageFrom": [
+      "expo-app/**/*.{js,jsx,ts,tsx}", 
+      "!expo-app/**/*.test.{js,ts,tsx}", 
+      "!expo-app/**/node_modules/**",
+      "!expo-app/**/coverage/**"
+  ]
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
