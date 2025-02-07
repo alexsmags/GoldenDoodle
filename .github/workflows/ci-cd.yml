@@ -40,10 +40,9 @@ jobs:
       - name: Run Jest Tests with Coverage
         run: |
           npx jest --coverage --ci
-          echo "Checking coverage directory..."
-          ls -l expo-app/coverage/ 
-          echo "Checking lcov.info..."
-          cat expo-app/coverage/lcov.info | head -20  
+          echo "Checking if coverage directory was created..."
+          ls -l expo-app/  # Check if the coverage folder exists in expo-app
+          ls -l expo-app/coverage/ || echo "No coverage generated!"  # Debugging step
         working-directory: expo-app
 
       - name: Upload Coverage Report to Codecov
