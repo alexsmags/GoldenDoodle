@@ -70,4 +70,4 @@ jobs:
           args: >
             -Dsonar.organization=goldendoodle-team
             -Dsonar.projectKey=alexsmags_GoldenDoodle
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
