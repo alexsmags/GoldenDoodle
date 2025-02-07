@@ -39,6 +39,8 @@ jobs:
 
       - name: Run Jest Tests with Coverage
         run: npx jest --coverage --ci
+             ls -l expo-app/coverage/
+             cat expo-app/coverage/lcov.info | head -20  
         working-directory: expo-app
 
       - name: Upload Coverage Report to Codecov
@@ -70,4 +72,9 @@ jobs:
           args: >
             -Dsonar.organization=goldendoodle-team
             -Dsonar.projectKey=alexsmags_GoldenDoodle
+            -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.sources=expo-app/src
+            -Dsonar.tests=expo-app/__tests__
             -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
+            -Dsonar.test.inclusions=expo-app/__tests__/**/*.test.{js,ts,tsx}
+            -Dsonar.exclusions=expo-app/node_modules/**,expo-app/coverage/**
