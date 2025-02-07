@@ -38,9 +38,12 @@ jobs:
         working-directory: expo-app
 
       - name: Run Jest Tests with Coverage
-        run: npx jest --coverage --ci
-             ls -l expo-app/coverage/
-             cat expo-app/coverage/lcov.info | head -20  
+        run: |
+          npx jest --coverage --ci
+          echo "Checking coverage directory..."
+          ls -l expo-app/coverage/ 
+          echo "Checking lcov.info..."
+          cat expo-app/coverage/lcov.info | head -20  
         working-directory: expo-app
 
       - name: Upload Coverage Report to Codecov
