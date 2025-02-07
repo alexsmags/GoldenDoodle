@@ -21,6 +21,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug Directory Structure
+        run: |
+          echo "Listing root directory..."
+          ls -l
+          echo "Listing contents of expo-app (if exists)..."
+          ls -l expo-app || echo "expo-app directory not found!"
+      
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
