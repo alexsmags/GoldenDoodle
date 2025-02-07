@@ -69,5 +69,5 @@ jobs:
         with:
           args: >
             -Dsonar.organization=goldendoodle-team
-            -Dsonar.projectKey=GoldenDoodle
+            -Dsonar.projectKey=alexsmags_GoldenDoodle
             -Dsonar.python.coverage.reportPaths=coverage.xml
