@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+      - develop
+      - feature/*
+      - bugfix/*
   pull_request:
     branches:
       - main
+      - develop
+      - feature/*
+      - bugfix/*
 
 jobs:
   build:
@@ -53,3 +59,15 @@ jobs:
       - name: Stop Expo Server
         if: always()
         run: pkill -f "expo start"
+
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=goldendoodle-team
+            -Dsonar.projectKey=GoldenDoodle
+            -Dsonar.python.coverage.reportPaths=coverage.xml
