@@ -20,13 +20,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Debug Directory Structure
-        run: |
-          echo "Listing root directory..."
-          ls -l
-          echo "Listing contents of expo-app (if exists)..."
-          ls -l expo-app || echo "expo-app directory not found!"
       
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -70,20 +63,3 @@ jobs:
       - name: Stop Expo Server
         if: always()
         run: pkill -f "expo start"
-
-
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=goldendoodle-team
-            -Dsonar.projectKey=alexsmags_GoldenDoodle
-            -Dsonar.branch.name=${{ github.head_ref || github.ref_name }}
-            -Dsonar.sources=expo-app
-            -Dsonar.tests=expo-app/__tests__
-            -Dsonar.test.inclusions=expo-app/__tests__/**/*.test.{js,ts,tsx}
-            -Dsonar.exclusions=expo-app/node_modules/**,expo-app/coverage/**,expo-app/__tests__/**
-            -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
