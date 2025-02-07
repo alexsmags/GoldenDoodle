@@ -81,9 +81,8 @@ jobs:
           args: >
             -Dsonar.organization=goldendoodle-team
             -Dsonar.projectKey=alexsmags_GoldenDoodle
-            -Dsonar.branch.name=${{ github.ref_name }}
-            -Dsonar.sources=expo-app/src
+            -Dsonar.branch.name=${{ github.head_ref || github.ref_name }}
+            -Dsonar.sources=expo-app
             -Dsonar.tests=expo-app/__tests__
             -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
-            -Dsonar.test.inclusions=expo-app/__tests__/**/*.test.{js,ts,tsx}
             -Dsonar.exclusions=expo-app/node_modules/**,expo-app/coverage/**
