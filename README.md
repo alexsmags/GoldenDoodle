@@ -58,7 +58,7 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 ## 📋 Installation & Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/alexsmags/GoldenDoodle
+   git clone https://github.com/Golden-Doodle/Golden-Doodle
 
 2. Configure the API keys in the `.env` file (if necessary)
 
