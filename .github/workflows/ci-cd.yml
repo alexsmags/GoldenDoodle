@@ -68,5 +68,11 @@ jobs:
         
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
-        env: 
+        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: "https://sonarcloud.io" 
+        with:
+          args: >
+            -Dsonar.organization=goldendoodle-team
+            -Dsonar.projectKey=alexsmags_GoldenDoodle
+
