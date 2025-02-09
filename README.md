@@ -49,11 +49,10 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 ## 📊 Technical Stack
 - **Frontend:** React Native
 - **Backend:** Node.js / Express.js
-- **Maps Integration:** Google Maps API / OpenStreetMap
-- **APIs:** Google Calendar API, Concordia Open Data API
+- **Maps Integration:** Google Maps API
+- **APIs:** Google Calendar API & Concordia Open Data API
 - **Authentication:** OAuth 2.0 (Google Sign-In) `TBD`
-- **Database:** MongoDB
-- **Hosting:** `TBD`
+- **Database:** FireBase
 
 ## 📋 Installation & Setup
 1. Clone the repository:
