@@ -128,13 +128,14 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 | Name         | Role                | Contact            |
 |--------------|--------------------|--------------------|
 | Alexander Smagorinski    | Team Lead/Full-Stack        | alexsmag@gmail.com |
-| Albaz Fathi    | N/A   | N/A  |
-| Anthony Anania    | N/A   | N/A  |
-| Brandon Toledano    | N/A     | N/A  |
-| Desire Ouattara    | N/A     | N/A  |
-| Gabriel Derhy    | N/A     | gabrielderhy@gmail.com  |
-| Jonathan Della Penta    | N/A     | N/A  |
-| Patrick Fuoco    | N/A     | pfuoco01@gmail.com  |
+| Albaz Fathi    | Back-End   | albazfathi@gmail.com  |
+| Anthony Anania    | Front-End   | tonzanania@gmail.com  |
+| Brandon Toledano    | Front-End     | brandontoledano1@gmail.com  |
+| Desire Ouattara    | N/A     | Desire_ouattara@hotmail.ca |
+| Gabriel Derhy    | Full-Stack     | gabrielderhy@gmail.com  |
+| Jonathan Della Penta    | N/A     | jonathandellapenta@gmail.com  |
+| Patrick Fuoco    | Front-End     | pfuoco01@gmail.com  |
+| Sadee Shadman    | Back-End     | N/A  |
 | Seth Hains   | N/A     | N/A  |
-| Steven Zrihen    | N/A     | N/A  |
+| Steven Zrihen    | Back-End     | N/A  |
 
