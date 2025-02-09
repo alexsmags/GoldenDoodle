@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import * as WebBrowser from "expo-web-browser";
-import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import { useAuthRequest } from "expo-auth-session/providers/google";
+import { makeRedirectUri } from "expo-auth-session";
 import { auth } from "../services/firebase/firebase";
 import { signInWithCredential, GoogleAuthProvider, User } from "firebase/auth";
 import {
@@ -9,77 +10,55 @@ import {
   GOOGLE_CLIENT_SECRET,
 } from "./googlePlatformConfig";
 
+interface UseGoogleSignIn {
+  user: User | null;
+  loading: boolean;
+  signIn: () => void;
+  accessToken: string | null;
+}
+
 WebBrowser.maybeCompleteAuthSession();
 
-export default function useGoogleSignIn() {
+export default function useGoogleSignIn(): UseGoogleSignIn {
+  const [request, response, promptAsync] = useAuthRequest({
+    clientId: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    scopes: ["profile", "email"], // Need to update to calendar most likely
+    // redirectUri: "https://auth.expo.io/@gderhy/expo-app",
+  });
+
   const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // const redirectUri = makeRedirectUri({
-  //   scheme: "myapp", // Must match "scheme" in app.json
-  //   path: "auth/profile",
-  // });
-
-  const discovery = {
-    authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-    tokenEndpoint: "https://oauth2.googleapis.com/token",
-    revocationEndpoint: "https://oauth2.googleapis.com/revoke",
-  };
-
-
-  const [request, response, promptAsync] = useAuthRequest(
-    {
-      clientId: GOOGLE_CLIENT_ID,
-      // clientSecret: GOOGLE_CLIENT_SECRET,
-      redirectUri: "http://localhost:8081/auth/profile",
-      scopes: [
-        "openid",
-        "profile",
-        "email",
-        "https://www.googleapis.com/auth/calendar.readonly",
-        "https://www.googleapis.com/auth/calendar.events.readonly",
-      ],
-    },
-    discovery
-  );
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
-    if (response?.type === "success" && response.params?.code) {
-      const exchangeCodeForToken = async () => {
-        setLoading(true);
-        try {
-          const tokenResponse = await fetch(discovery.tokenEndpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-              code: response.params.code,
-              client_id: GOOGLE_CLIENT_ID,
-              client_secret: GOOGLE_CLIENT_SECRET,
-              redirect_uri: "http://localhost:8081/auth/profile",
-              grant_type: "authorization_code",
-            }).toString(),
-          });
+    if (response?.type === "success") {
+      const { authentication } = response;
 
-          const tokenData = await tokenResponse.json();
-          setAccessToken(tokenData.access_token); // Store the access token for API requests
+      if (authentication) {
+        const { accessToken: token } = authentication;
 
-          if (tokenData.id_token) {
-            // Authenticate with Firebase if needed
-            const credential = GoogleAuthProvider.credential(
-              tokenData.id_token
-            );
+        // Store the accessToken
+        setAccessToken(token);
+
+        // Sign in with Firebase -- Use ID token for firebase authentication
+        const { idToken } = authentication;
+        const credential = GoogleAuthProvider.credential(idToken);
+
+        const handleSignIn = async () => {
+          setLoading(true);
+          try {
             const userCredential = await signInWithCredential(auth, credential);
             setUser(userCredential.user);
+          } catch (error) {
+            console.error(error);
+          } finally {
+            setLoading(false);
           }
-        } catch (error) {
-          console.error("Google OAuth Error:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
+        };
 
-      exchangeCodeForToken();
+        handleSignIn(); // Calls the async function
+      }
     }
   }, [response]);
 
@@ -88,5 +67,5 @@ export default function useGoogleSignIn() {
     promptAsync();
   };
 
-  return { user, accessToken, loading, signIn };
+  return { user, loading, signIn, accessToken };
 }
