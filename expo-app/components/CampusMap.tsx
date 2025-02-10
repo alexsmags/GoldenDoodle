@@ -11,17 +11,14 @@ import {
   Button, // Import Button
 } from "react-native";
 import CustomMarker from "./CustomMarker";
-import { SGWBuildings, LoyolaBuildings, Building } from "../data/buildingData";
+import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
 import { getDirections } from "../utils/directions";
 import { initialRegion, SGWMarkers, LoyolaMarkers } from "./customMarkerData";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import NavTab from "./NavTab";
 import * as Location from "expo-location";
+import { Building, Coordinates } from "../utils/types";
 
-type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
 
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
@@ -63,16 +60,30 @@ const CampusMap = () => {
 
   // Fetch route from user's location to destination
   const fetchRoute = useCallback(async () => {
-    if (!userLocation || !destination) {
+
+    // Will probably change this in the future
+    if (!userLocation) {
+      Alert.alert("Cannot fetch route without user location");
+      return;
+    }
+
+    let targetDestination = destination;
+
+    if (!targetDestination && selectedBuilding) {
+      targetDestination = selectedBuilding.coordinates[0]; // Use local variable
+    }
+
+    if (!targetDestination) {
       Alert.alert("Select a destination point");
       return;
     }
 
-    const route = await getDirections(userLocation, destination);
+    const route = await getDirections(userLocation, targetDestination);
+
     if (route) {
       setRouteCoordinates(route);
     }
-  }, [userLocation, destination]);
+  }, [userLocation, destination, selectedBuilding]);
 
   // Handle marker press to set destination
   const handleMarkerPress = useCallback((coordinate: Coordinates) => {

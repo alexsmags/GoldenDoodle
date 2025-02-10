@@ -1,11 +1,4 @@
-export type Building = {
-  id: string;
-  name: string;
-  coordinates: { latitude: number; longitude: number }[];
-  fillColor: string;
-  strokeColor: string;
-};
-
+import { Building } from '../utils/types';
 
 export const SGWBuildings : Building[] = [
   {
