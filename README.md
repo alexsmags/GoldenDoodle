@@ -49,16 +49,15 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 ## 📊 Technical Stack
 - **Frontend:** React Native
 - **Backend:** Node.js / Express.js
-- **Maps Integration:** Google Maps API / OpenStreetMap
-- **APIs:** Google Calendar API, Concordia Open Data API
+- **Maps Integration:** Google Maps API
+- **APIs:** Google Calendar API & Concordia Open Data API
 - **Authentication:** OAuth 2.0 (Google Sign-In) `TBD`
-- **Database:** MongoDB
-- **Hosting:** `TBD`
+- **Database:** FireBase
 
 ## 📋 Installation & Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/alexsmags/GoldenDoodle
+   git clone https://github.com/Golden-Doodle/Golden-Doodle
 
 2. Configure the API keys in the `.env` file (if necessary)
 
@@ -87,6 +86,30 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 
 7. The app will load on your device, allowing you to test it in real-time.
 
+
+### Running the ExpressJS backend server
+
+1. Change to backend directory
+   ```bash
+   cd .\backend\
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Run server:
+   ```bash
+   npm run start
+   ```
+
+   or in dev mode:
+   ```bash
+   npm run dev
+   ```
+
+
 ## 📅 Project Timeline
 
 | Release     | Sprint        | Description                         | Duration       |
@@ -104,13 +127,14 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 | Name         | Role                | Contact            |
 |--------------|--------------------|--------------------|
 | Alexander Smagorinski    | Team Lead/Full-Stack        | alexsmag@gmail.com |
-| Albaz Fathi    | N/A   | N/A  |
-| Anthony Anania    | N/A   | N/A  |
-| Brandon Toledano    | N/A     | N/A  |
-| Desire Ouattara    | N/A     | N/A  |
-| Gabriel Derhy    | N/A     | gabrielderhy@gmail.com  |
-| Jonathan Della Penta    | N/A     | N/A  |
-| Patrick Fuoco    | N/A     | N/A  |
+| Albaz Fathi    | Back-End   | albazfathi@gmail.com  |
+| Anthony Anania    | Front-End   | tonzanania@gmail.com  |
+| Brandon Toledano    | Front-End     | brandontoledano1@gmail.com  |
+| Desire Ouattara    | N/A     | Desire_ouattara@hotmail.ca |
+| Gabriel Derhy    | Full-Stack     | gabrielderhy@gmail.com  |
+| Jonathan Della Penta    | N/A     | jonathandellapenta@gmail.com  |
+| Patrick Fuoco    | Front-End     | pfuoco01@gmail.com  |
+| Sadee Shadman    | Back-End     | N/A  |
 | Seth Hains   | N/A     | N/A  |
-| Steven Zrihen    | N/A     | N/A  |
+| Steven Zrihen    | Back-End     | N/A  |
 

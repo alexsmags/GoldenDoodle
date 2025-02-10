@@ -36,3 +36,12 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# Android
+android/
+
+# Google APIs Keys
+app/hooks/googlePlatFormConfig.ts
+
+# Firebase API Keys
+app/services/firebase/firebaseConfig.ts

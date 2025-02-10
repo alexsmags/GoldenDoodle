@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+      - develop
+      - feature/*
+      - bugfix/*
   pull_request:
     branches:
       - main
+      - develop
+      - feature/*
+      - bugfix/*
 
 jobs:
   build:
@@ -14,7 +20,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+      
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,6 +39,22 @@ jobs:
         run: npm install
         working-directory: expo-app
 
+      - name: Run Jest Tests with Coverage
+        run: |
+          echo "Running Jest Coverage..."
+          npx jest --coverage --ci
+          echo "Checking if coverage directory was created..."
+          ls -l coverage/ || echo "No coverage folder found!"
+        working-directory: expo-app
+
+      - name: Upload Coverage Report to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: expo-app/coverage/lcov.info
+          fail_ci_if_error: true
+          verbose: true
+
       - name: Start Expo Server and Wait
         run: |
           npx expo start --web &
@@ -41,3 +65,17 @@ jobs:
       - name: Stop Expo Server
         if: always()
         run: pkill -f "expo start"
+        
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: "https://sonarcloud.io" 
+        with:
+          args: >
+            -Dsonar.organization=goldendoodle-team
+            -Dsonar.projectKey=alexsmags_GoldenDoodle
+            -Dsonar.sources=expo-app/app
+            -Dsonar.tests=expo-app/__tests__
+            -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
+
