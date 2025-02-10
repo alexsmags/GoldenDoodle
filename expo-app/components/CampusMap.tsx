@@ -168,6 +168,7 @@ const CampusMap = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, position: "relative" },
+  
   map: { flex: 1 },
   topRightContainer: {
     position: "absolute",
