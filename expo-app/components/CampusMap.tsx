@@ -119,14 +119,13 @@ const CampusMap = () => {
     setIsModalVisible(true);
   };
 
-  
-
   // Handle directions press
   const onDirectionsPress = useCallback(() => {
     if (selectedBuilding) {
       fetchRouteWithDestination(selectedBuilding.coordinates[0]);
     }
   }, [selectedBuilding, fetchRouteWithDestination]);
+
   return (
     <View style={styles.container}>
       <View style={styles.topRightContainer}>
@@ -192,14 +191,6 @@ const CampusMap = () => {
           <Marker coordinate={destination} pinColor="red" title="Destination" />
         )}
 
-        {/* Render User Location Marker */}
-        {userLocation && (
-          <Marker
-            coordinate={userLocation}
-            pinColor="blue"
-            title="Your Location"
-          />
-        )}
       </MapView>
 
       {/* Modal for Building Info */}
