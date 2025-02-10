@@ -3,10 +3,10 @@ export const SGWBuildings = [
     id: 'FB',
     name: 'Faubourg Building',
     coordinates: [
-      { latitude: 45.494695, longitude: -73.577226 },
-      { latitude: 45.494687, longitude: -73.577214 },
-      { latitude: 45.494395, longitude: -73.577508 },
-      { latitude: 45.494741, longitude: -73.578126 }
+      { latitude: 45.49496 , longitude: -73.57784 },
+      { latitude: 45.49468, longitude: -73.5772 },
+      { latitude: 45.49441, longitude: -73.57754 },
+      { latitude: 45.49469, longitude: -73.57806 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)", // Semi-Transparent blue
     strokeColor: "rgba(0, 0, 255, 1)" // Solid blue outline
@@ -16,9 +16,9 @@ export const SGWBuildings = [
     name: 'Faubourg Ste-Catherine Building',
     coordinates: [
       { latitude: 45.49471, longitude: -73.57806 },
-      { latitude: 45.49445, longitude: -73.57762 },
-      { latitude: 45.49383, longitude: -73.57911 },
-      { latitude: 45.49360, longitude: -73.57871 }
+      { latitude: 45.49441, longitude: -73.57754  },
+      { latitude: 45.4936, longitude: -73.57871 },
+      { latitude: 45.49383, longitude: -73.57911 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
     strokeColor: "rgba(0, 0, 255, 1)"
@@ -28,7 +28,7 @@ export const SGWBuildings = [
     name: 'John Molson Building',
     coordinates: [
       { latitude: 45.49559, longitude: -73.57921 },
-      { latitude: 45.49523, longitude: -73.57785 },
+      { latitude: 45.49523, longitude: -73.5785 },
       { latitude: 45.49496, longitude: -73.57878 },
       { latitude: 45.49535, longitude: -73.57941 }
     ],
@@ -67,9 +67,9 @@ export const SGWBuildings = [
     name: 'Learning Square Building',
     coordinates: [
       { latitude: 45.49632, longitude: -73.57978 },
-      { latitude: 45.49639, longitude: -73.57922 },
       { latitude: 45.49615, longitude: -73.57941 },
-      { latitude: 45.49632, longitude: -73.57978 }
+      { latitude: 45.49639, longitude: -73.57922 },
+      { latitude: 45.49656, longitude: -73.57959 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
     strokeColor: "rgba(0, 0, 255, 1)"
@@ -78,10 +78,10 @@ export const SGWBuildings = [
     id: 'ER',
     name: 'ER Building',
     coordinates: [
-      { latitude: 45.49670, longitude: -73.58012 },
-      { latitude: 45.49656, longitude: -73.57922 },
+      { latitude: 45.49656, longitude: -73.57964 },
       { latitude: 45.49611, longitude: -73.57997 },
-      { latitude: 45.49626, longitude: -73.58047 }
+      { latitude: 45.49626, longitude: -73.58047 },
+      { latitude: 45.4967, longitude: -73.58012  }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
     strokeColor: "rgba(0, 0, 255, 1)"
@@ -120,6 +120,18 @@ export const SGWBuildings = [
       { latitude: 45.49622, longitude: -73.57377 },
       { latitude: 45.49594, longitude: -73.57317 },
       { latitude: 45.49532, longitude: -73.57371 }
+    ],
+    fillColor: "rgba(0, 100, 255, 0.5)",
+    strokeColor: "rgba(0, 0, 255, 1)"
+  },
+  {
+    id: 'GN',
+    name: 'Grey Nuns Building',
+    coordinates: [
+      { latitude: 45.4945, longitude: -73.57695 },
+      { latitude: 45.49387, longitude: -73.57527 },
+      { latitude: 45.49243, longitude: -73.57664 },
+      { latitude: 45.49333, longitude: -73.57835 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
     strokeColor: "rgba(0, 0, 255, 1)"
