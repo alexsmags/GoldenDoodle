@@ -7,8 +7,8 @@ import {
   Switch,
   Text,
   TouchableOpacity,
-  Modal, // Import Modal
-  Button, // Import Button
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import CustomMarker from "./CustomMarker";
 import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
@@ -18,7 +18,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import NavTab from "./NavTab";
 import * as Location from "expo-location";
 import { Building, Coordinates } from "../utils/types";
-
+import ModalComponent from "./modals/BuildingInfoModal";
 
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
@@ -29,7 +29,7 @@ const CampusMap = () => {
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
     null
   );
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Modal visibility state
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
   const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
@@ -60,8 +60,6 @@ const CampusMap = () => {
 
   // Fetch route from user's location to destination
   const fetchRoute = useCallback(async () => {
-
-    // Will probably change this in the future
     if (!userLocation) {
       Alert.alert("Cannot fetch route without user location");
       return;
@@ -70,7 +68,7 @@ const CampusMap = () => {
     let targetDestination = destination;
 
     if (!targetDestination && selectedBuilding) {
-      targetDestination = selectedBuilding.coordinates[0]; // Use local variable
+      targetDestination = selectedBuilding.coordinates[0];
     }
 
     if (!targetDestination) {
@@ -87,7 +85,7 @@ const CampusMap = () => {
 
   // Handle marker press to set destination
   const handleMarkerPress = useCallback((coordinate: Coordinates) => {
-    console.log("Setting destination:", coordinate);
+    // console.log("Setting destination:", coordinate);
     setDestination(coordinate);
   }, []);
 
@@ -101,18 +99,16 @@ const CampusMap = () => {
   const handleBuildingPressed = (building: Building) => () => {
     if (selectedBuilding?.id === building.id) {
       setSelectedBuilding(null);
-      setIsModalVisible(false); // Close modal if the same building is clicked again
+      setIsModalVisible(false);
       return;
     }
-    console.log("Building pressed:", building);
+    // console.log("Building pressed:", building);
     setSelectedBuilding(building);
-    setIsModalVisible(true); // Open modal
+    setIsModalVisible(true);
   };
 
   // Get fill color with opacity
-  const getFillColorWithOpacity = (
-    building: Building,
-  ) => {
+  const getFillColorWithOpacity = (building: Building) => {
     const fillColor = building.fillColor;
     let rgbaColor = fillColor;
     if (fillColor.startsWith("#")) {
@@ -204,45 +200,40 @@ const CampusMap = () => {
       </MapView>
 
       {/* Modal for Building Info */}
-      <Modal
+      <ModalComponent
         visible={isModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setIsModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {selectedBuilding && (
-              <>
-                <Text style={styles.modalTitle}>{selectedBuilding.name}</Text>
-                <Text>{}</Text>
-                <Button
-                  title="Navigate to this Building"
-                  onPress={() => {
-                    setDestination({
-                      latitude: selectedBuilding.coordinates[0].latitude,
-                      longitude: selectedBuilding.coordinates[0].longitude,
-                    });
-                    setIsModalVisible(false); // Close modal after setting destination
-                  }}
-                />
-                <Button
-                  title="Close"
-                  onPress={() => setIsModalVisible(false)}
-                />
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
+        onClose={() => setIsModalVisible(false)}
+        title={selectedBuilding?.name || "Building Information"}
+        description={selectedBuilding?.description}
+        footerContent={
+          <TouchableOpacity
+            style={styles.navigateButton}
+            onPress={() => {
+              if (selectedBuilding) {
+                setDestination({
+                  latitude: selectedBuilding.coordinates[0].latitude,
+                  longitude: selectedBuilding.coordinates[0].longitude,
+                });
+                setIsModalVisible(false);
+              }
+            }}
+          >
+            <Text style={styles.navigateButtonText}>
+              Navigate to this Building
+            </Text>
+          </TouchableOpacity>
+        }
+      />
 
       <NavTab
         campus={campus}
+        selectedBuilding={selectedBuilding}
         onNavigatePress={fetchRoute}
         onTravelPress={() => Alert.alert("Travel pressed")}
         onEatPress={() => Alert.alert("Eat on Campus pressed")}
         onNextClassPress={() => Alert.alert("Next Class pressed")}
         onMoreOptionsPress={() => Alert.alert("More Options pressed")}
+        onInfoPress={() => setIsModalVisible(true)}
       />
     </View>
   );
@@ -280,7 +271,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   switchText: { marginRight: 5, fontSize: 12, fontWeight: "bold" },
-  modalContainer: {
+  modalOverlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -288,14 +279,52 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
+    borderRadius: 12,
+    width: "90%",
+    maxWidth: 400,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
+  },
+  closeButton: {
+    padding: 4,
+  },
+  modalBody: {
+    padding: 16,
+  },
+  modalDescription: {
+    fontSize: 16,
+    color: "#555",
+  },
+  modalFooter: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
+  },
+  navigateButton: {
+    backgroundColor: "#007AFF",
+    borderRadius: 8,
+    padding: 12,
+    alignItems: "center",
+  },
+  navigateButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

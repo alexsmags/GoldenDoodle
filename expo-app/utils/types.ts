@@ -9,4 +9,5 @@ export type Building = {
   coordinates: Coordinates[];
   fillColor: string;
   strokeColor: string;
+  description?: string;
 };
