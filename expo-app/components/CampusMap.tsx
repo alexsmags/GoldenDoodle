@@ -7,26 +7,29 @@ import {
   Switch,
   Text,
   TouchableOpacity,
+  Modal, // Import Modal
+  Button, // Import Button
 } from "react-native";
 import CustomMarker from "./CustomMarker";
 import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
 import { getDirections } from "../utils/directions";
 import { initialRegion, SGWMarkers, LoyolaMarkers } from "./customMarkerData";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import NavTab from "./NavTab"; // Import the NavTab component
+import NavTab from "./NavTab";
 import * as Location from "expo-location";
+import { Building, Coordinates } from "../utils/types";
 
-type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
 
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
-  const [destination, setDestination] = useState<Coordinates | null>(null); // Only destination is needed
-  const [userLocation, setUserLocation] = useState<Coordinates | null>(null); // User's location is the origin
+  const [destination, setDestination] = useState<Coordinates | null>(null);
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [viewCampusMap, setViewCampusMap] = useState<boolean>(true);
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
+    null
+  );
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Modal visibility state
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
   const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
@@ -52,24 +55,38 @@ const CampusMap = () => {
   const resetDirections = () => {
     setRouteCoordinates([]);
     setDestination(null);
+    setSelectedBuilding(null);
   };
 
   // Fetch route from user's location to destination
   const fetchRoute = useCallback(async () => {
-    if (!userLocation || !destination) {
+
+    // Will probably change this in the future
+    if (!userLocation) {
+      Alert.alert("Cannot fetch route without user location");
+      return;
+    }
+
+    let targetDestination = destination;
+
+    if (!targetDestination && selectedBuilding) {
+      targetDestination = selectedBuilding.coordinates[0]; // Use local variable
+    }
+
+    if (!targetDestination) {
       Alert.alert("Select a destination point");
       return;
     }
 
-    const route = await getDirections(userLocation, destination);
+    const route = await getDirections(userLocation, targetDestination);
+
     if (route) {
       setRouteCoordinates(route);
     }
-  }, [userLocation, destination]);
+  }, [userLocation, destination, selectedBuilding]);
 
-  // Handle long press on the map to set destination
-  const handleMapPress = useCallback((event: any) => {
-    const coordinate = event.nativeEvent.coordinate;
+  // Handle marker press to set destination
+  const handleMarkerPress = useCallback((coordinate: Coordinates) => {
     console.log("Setting destination:", coordinate);
     setDestination(coordinate);
   }, []);
@@ -79,6 +96,37 @@ const CampusMap = () => {
     setCampus((prevCampus) => (prevCampus === "SGW" ? "Loyola" : "SGW"));
     resetDirections();
   }, []);
+
+  // Handle building press to show building info
+  const handleBuildingPressed = (building: Building) => () => {
+    if (selectedBuilding?.id === building.id) {
+      setSelectedBuilding(null);
+      setIsModalVisible(false); // Close modal if the same building is clicked again
+      return;
+    }
+    console.log("Building pressed:", building);
+    setSelectedBuilding(building);
+    setIsModalVisible(true); // Open modal
+  };
+
+  // Get fill color with opacity
+  const getFillColorWithOpacity = (
+    building: Building,
+  ) => {
+    const fillColor = building.fillColor;
+    let rgbaColor = fillColor;
+    if (fillColor.startsWith("#")) {
+      const hexToRgb = (hex: any) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, 1)`;
+      };
+      rgbaColor = hexToRgb(fillColor);
+    }
+    const opacity = building.id === selectedBuilding?.id ? 0.8 : 0.4;
+    return rgbaColor.replace(/[\d\.]+\)$/, `${opacity})`);
+  };
 
   return (
     <View style={styles.container}>
@@ -107,7 +155,6 @@ const CampusMap = () => {
         loadingEnabled={true}
         scrollEnabled={true}
         zoomEnabled={true}
-        onLongPress={handleMapPress}
       >
         {/* Render Markers */}
         {markers.map((marker) => (
@@ -116,6 +163,7 @@ const CampusMap = () => {
             coordinate={marker.coordinate}
             title={marker.title}
             description={marker.description}
+            onPress={() => handleMarkerPress(marker.coordinate)}
           />
         ))}
 
@@ -124,9 +172,10 @@ const CampusMap = () => {
           <Polygon
             key={building.id}
             coordinates={building.coordinates}
-            fillColor={building.fillColor}
+            fillColor={getFillColorWithOpacity(building)}
             strokeColor={building.strokeColor}
             strokeWidth={2}
+            onPress={handleBuildingPressed(building)}
           />
         ))}
 
@@ -154,6 +203,39 @@ const CampusMap = () => {
         )}
       </MapView>
 
+      {/* Modal for Building Info */}
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {selectedBuilding && (
+              <>
+                <Text style={styles.modalTitle}>{selectedBuilding.name}</Text>
+                <Text>{}</Text>
+                <Button
+                  title="Navigate to this Building"
+                  onPress={() => {
+                    setDestination({
+                      latitude: selectedBuilding.coordinates[0].latitude,
+                      longitude: selectedBuilding.coordinates[0].longitude,
+                    });
+                    setIsModalVisible(false); // Close modal after setting destination
+                  }}
+                />
+                <Button
+                  title="Close"
+                  onPress={() => setIsModalVisible(false)}
+                />
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
+
       <NavTab
         campus={campus}
         onNavigatePress={fetchRoute}
@@ -168,7 +250,6 @@ const CampusMap = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, position: "relative" },
-  
   map: { flex: 1 },
   topRightContainer: {
     position: "absolute",
@@ -199,6 +280,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   switchText: { marginRight: 5, fontSize: 12, fontWeight: "bold" },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
 });
 
 export default CampusMap;

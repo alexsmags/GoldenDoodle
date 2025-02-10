@@ -1,12 +1,8 @@
 import Constants from "expo-constants";
 import { decode } from "@mapbox/polyline";
+import { Coordinates } from "./types";
 
 const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.googleMapsApiKey;
-
-type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
 
 export const getDirections = async (
   origin: Coordinates,

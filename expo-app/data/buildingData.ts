@@ -1,4 +1,6 @@
-export const SGWBuildings = [
+import { Building } from '../utils/types';
+
+export const SGWBuildings : Building[] = [
   {
     id: 'FB',
     name: 'Faubourg Building',
@@ -138,7 +140,7 @@ export const SGWBuildings = [
   }
 ];
 
-export const LoyolaBuildings = [
+export const LoyolaBuildings : Building[] = [
   {
     id: 'CW',
     name: "Central Wing,",
