@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
-import MapView, { Polygon, Polyline, Marker } from 'react-native-maps';
-import { StyleSheet, View, Button, Alert } from 'react-native';
-import CustomMarker from './CustomMarker';
-import { SGWBuildings, LoyolaBuildings } from '../data/buildingData';
-import { getDirections } from '../utils/directions';
+import React, { useState } from "react";
+import MapView, { Polygon, Polyline, Marker } from "react-native-maps";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Switch,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import CustomMarker from "./CustomMarker";
+import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
+import { getDirections } from "../utils/directions";
+import { initialRegion, SGWMarkers, LoyolaMarkers } from "./customMarkerData";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 
 type Coordinates = {
   latitude: number;
@@ -11,63 +21,19 @@ type Coordinates = {
 };
 
 const CampusMap = () => {
-  const [campus, setCampus] = useState<'SGW' | 'Loyola'>('SGW');
+  const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
   const [origin, setOrigin] = useState<Coordinates | null>(null);
   const [destination, setDestination] = useState<Coordinates | null>(null);
+  const [viewCampusMap, setViewCampusMap] = useState<boolean>(true);
 
-  const initialRegion = {
-    SGW: {
-      latitude: 45.4971,
-      longitude: -73.5792,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    },
-    Loyola: {
-      latitude: 45.458,
-      longitude: -73.640,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    },
-  };
-
-  const SGWMarkers = [
-    {
-      id: 1,
-      title: 'Concordia University - SGW',
-      description: 'SGW Campus',
-      coordinate: { latitude: 45.4971, longitude: -73.5792 },
-    },
-    {
-      id: 2,
-      title: 'Guy-Concordia Metro',
-      description: 'Public transport near campus',
-      coordinate: { latitude: 45.4958, longitude: -73.5781 },
-    },
-  ];
-
-  const LoyolaMarkers = [
-    {
-      id: 1,
-      title: 'Concordia University - Loyola',
-      description: 'Loyola Campus',
-      coordinate: { latitude: 45.458, longitude: -73.640 },
-    },
-    {
-      id: 2,
-      title: 'Loyola Chapel',
-      description: 'Historic chapel on Loyola Campus',
-      coordinate: { latitude: 45.459, longitude: -73.641 },
-    },
-  ];
-
-  const markers = campus === 'SGW' ? SGWMarkers : LoyolaMarkers;
-  const buildings = campus === 'SGW' ? SGWBuildings : LoyolaBuildings;
+  const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
+  const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
 
   // Fetch route from origin to destination
   const fetchRoute = async () => {
     if (!origin || !destination) {
-      Alert.alert('Select both origin and destination points');
+      Alert.alert("Select both origin and destination points");
       return;
     }
 
@@ -82,30 +48,46 @@ const CampusMap = () => {
     const coordinate = event.nativeEvent.coordinate;
     if (!origin) {
       setOrigin(coordinate);
-      Alert.alert('Origin set');
+      Alert.alert("Origin set");
     } else if (!destination) {
       setDestination(coordinate);
-      Alert.alert('Destination set');
+      Alert.alert("Destination set");
     } else {
-      Alert.alert('Both origin and destination are already set');
+      Alert.alert("Both origin and destination are already set");
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Button
-          title={`Switch to ${campus === 'SGW' ? 'Loyola' : 'SGW'} Campus`}
+      {/* Container for the toggle switch and campus view button */}
+      <View style={styles.topRightContainer}>
+        {/* View Campus Button */}
+        <TouchableOpacity
+          style={styles.buttonContainer}
           onPress={() => {
-            setCampus(campus === 'SGW' ? 'Loyola' : 'SGW');
+            setCampus(campus === "SGW" ? "Loyola" : "SGW");
             setRouteCoordinates([]);
             setOrigin(null);
             setDestination(null);
           }}
-          color="#1e90ff"
-        />
-        <Button title="Fetch Route" onPress={fetchRoute} color="#32cd32" />
+        >
+          <Text style={styles.buttonText}>
+            <MaterialIcons name="arrow-upward" size={16} color="black" />
+            <MaterialIcons name="arrow-downward" size={16} color="black" />
+            View {campus === "SGW" ? "Loyola Campus" : "SGW Campus"}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Toggle Switch */}
+        <View style={styles.switchContainer}>
+          <Text style={styles.switchText}>View Campus Map</Text>
+          <Switch
+            value={viewCampusMap}
+            onValueChange={(value) => setViewCampusMap(value)}
+          />
+        </View>
       </View>
+
       <MapView
         style={styles.map}
         region={initialRegion[campus]}
@@ -162,19 +144,46 @@ const CampusMap = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
   },
   map: {
     flex: 1,
   },
-  buttonContainer: {
-    position: 'absolute',
+  topRightContainer: {
+    position: "absolute",
     top: 10,
-    left: 10,
     right: 10,
     zIndex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    flexDirection: "column",
+    alignItems: "flex-end",
+  },
+  buttonContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
     borderRadius: 8,
-    padding: 5,
+    borderWidth: 1,
+    borderColor: "black",
+    padding: 10,
+    marginBottom: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    fontSize: 14, // Smaller font size
+    fontWeight: "bold", // Bold text
+  },
+  switchContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "black",
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  switchText: {
+    marginRight: 5,
+    fontSize: 12, // Smaller font size
+    fontWeight: "bold", // Bold text
   },
 });
 
