@@ -1,9 +1,11 @@
 import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { Building } from "../utils/types";
 
 type NavTabProps = {
   campus: "SGW" | "Loyola";
+  selectedBuilding: Building | null;
   onNavigatePress?: () => void;
   onTravelPress?: () => void;
   onEatPress?: () => void;
@@ -15,6 +17,7 @@ type NavTabProps = {
 
 const NavTab = ({
   campus,
+  selectedBuilding,
   onNavigatePress,
   onTravelPress,
   onEatPress,
@@ -26,7 +29,7 @@ const NavTab = ({
   // console.log("NavTab is rendering!"); // Debugging line
   return (
     <SafeAreaView style={styles.navTab}>
-      {true ? ( // Show different tabs when building will be pressed to show building info
+      {!selectedBuilding ? ( // Show different tabs when building will be pressed to show building info
         <>
           {/* Navigate (Campus Icon) */}
           <TouchableOpacity style={styles.tabItem} onPress={onNavigatePress}>
