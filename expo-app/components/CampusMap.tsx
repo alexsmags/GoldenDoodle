@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import MapView, { Polygon, Polyline, Marker } from "react-native-maps";
 import {
   StyleSheet,
@@ -13,7 +13,8 @@ import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
 import { getDirections } from "../utils/directions";
 import { initialRegion, SGWMarkers, LoyolaMarkers } from "./customMarkerData";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-
+import NavTab from "./NavTab"; // Import the NavTab component
+import * as Location from "expo-location";
 
 type Coordinates = {
   latitude: number;
@@ -23,54 +24,66 @@ type Coordinates = {
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
-  const [origin, setOrigin] = useState<Coordinates | null>(null);
-  const [destination, setDestination] = useState<Coordinates | null>(null);
+  const [destination, setDestination] = useState<Coordinates | null>(null); // Only destination is needed
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null); // User's location is the origin
   const [viewCampusMap, setViewCampusMap] = useState<boolean>(true);
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
   const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
 
-  // Fetch route from origin to destination
-  const fetchRoute = async () => {
-    if (!origin || !destination) {
-      Alert.alert("Select both origin and destination points");
+  // Get user’s current location
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission Denied", "Allow location access to navigate.");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setUserLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    })();
+  }, []);
+
+  // Reset destination and route
+  const resetDirections = () => {
+    setRouteCoordinates([]);
+    setDestination(null);
+  };
+
+  // Fetch route from user's location to destination
+  const fetchRoute = useCallback(async () => {
+    if (!userLocation || !destination) {
+      Alert.alert("Select a destination point");
       return;
     }
 
-    const route = await getDirections(origin, destination);
+    const route = await getDirections(userLocation, destination);
     if (route) {
       setRouteCoordinates(route);
     }
-  };
+  }, [userLocation, destination]);
 
-  // Handle user tap on the map
-  const handleMapPress = (event: any) => {
+  // Handle long press on the map to set destination
+  const handleMapPress = useCallback((event: any) => {
     const coordinate = event.nativeEvent.coordinate;
-    if (!origin) {
-      setOrigin(coordinate);
-      Alert.alert("Origin set");
-    } else if (!destination) {
-      setDestination(coordinate);
-      Alert.alert("Destination set");
-    } else {
-      Alert.alert("Both origin and destination are already set");
-    }
-  };
+    console.log("Setting destination:", coordinate);
+    setDestination(coordinate);
+  }, []);
+
+  // Toggle between SGW and Loyola campuses
+  const toggleCampus = useCallback(() => {
+    setCampus((prevCampus) => (prevCampus === "SGW" ? "Loyola" : "SGW"));
+    resetDirections();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Container for the toggle switch and campus view button */}
       <View style={styles.topRightContainer}>
-        {/* View Campus Button */}
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => {
-            setCampus(campus === "SGW" ? "Loyola" : "SGW");
-            setRouteCoordinates([]);
-            setOrigin(null);
-            setDestination(null);
-          }}
-        >
+        <TouchableOpacity style={styles.buttonContainer} onPress={toggleCampus}>
           <Text style={styles.buttonText}>
             <MaterialIcons name="arrow-upward" size={16} color="black" />
             <MaterialIcons name="arrow-downward" size={16} color="black" />
@@ -78,7 +91,6 @@ const CampusMap = () => {
           </Text>
         </TouchableOpacity>
 
-        {/* Toggle Switch */}
         <View style={styles.switchContainer}>
           <Text style={styles.switchText}>View Campus Map</Text>
           <Switch
@@ -95,7 +107,7 @@ const CampusMap = () => {
         loadingEnabled={true}
         scrollEnabled={true}
         zoomEnabled={true}
-        onPress={handleMapPress} // Handle map press to set origin/destination
+        onLongPress={handleMapPress}
       >
         {/* Render Markers */}
         {markers.map((marker) => (
@@ -127,31 +139,39 @@ const CampusMap = () => {
           />
         )}
 
-        {/* Render Origin Marker */}
-        {origin && (
-          <Marker coordinate={origin} pinColor="green" title="Origin" />
-        )}
-
         {/* Render Destination Marker */}
         {destination && (
           <Marker coordinate={destination} pinColor="red" title="Destination" />
         )}
+
+        {/* Render User Location Marker */}
+        {userLocation && (
+          <Marker
+            coordinate={userLocation}
+            pinColor="blue"
+            title="Your Location"
+          />
+        )}
       </MapView>
+
+      <NavTab
+        campus={campus}
+        onNavigatePress={fetchRoute}
+        onTravelPress={() => Alert.alert("Travel pressed")}
+        onEatPress={() => Alert.alert("Eat on Campus pressed")}
+        onNextClassPress={() => Alert.alert("Next Class pressed")}
+        onMoreOptionsPress={() => Alert.alert("More Options pressed")}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: "relative",
-  },
-  map: {
-    flex: 1,
-  },
+  container: { flex: 1, position: "relative" },
+  map: { flex: 1 },
   topRightContainer: {
     position: "absolute",
-    top: 10,
+    bottom: 100,
     right: 10,
     zIndex: 1,
     flexDirection: "column",
@@ -167,10 +187,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonText: {
-    fontSize: 14, // Smaller font size
-    fontWeight: "bold", // Bold text
-  },
+  buttonText: { fontSize: 14, fontWeight: "bold" },
   switchContainer: {
     backgroundColor: "rgba(255, 255, 255, 0.4)",
     borderRadius: 8,
@@ -180,11 +197,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  switchText: {
-    marginRight: 5,
-    fontSize: 12, // Smaller font size
-    fontWeight: "bold", // Bold text
-  },
+  switchText: { marginRight: 5, fontSize: 12, fontWeight: "bold" },
 });
 
 export default CampusMap;
