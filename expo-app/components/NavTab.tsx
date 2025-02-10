@@ -13,6 +13,7 @@ type NavTabProps = {
   onMoreOptionsPress?: () => void;
   onInfoPress?: () => void;
   onBackPress?: () => void;
+  onDirectionsPress?: () => void;
 };
 
 const NavTab = ({
@@ -25,6 +26,7 @@ const NavTab = ({
   onMoreOptionsPress,
   onInfoPress, 
   onBackPress,
+  onDirectionsPress,
 }: NavTabProps) => {
   // console.log("NavTab is rendering!"); // Debugging line
   return (
@@ -79,7 +81,7 @@ const NavTab = ({
           </TouchableOpacity>
 
           {/* Directions -- this allows the user to press this to find directions from current position to the building */}
-          <TouchableOpacity style={styles.tabItem} onPress={()=>{}}>
+          <TouchableOpacity style={styles.tabItem} onPress={onDirectionsPress}>
             <Ionicons name="navigate" size={24} color="black" />
             <Text style={styles.tabText}>Directions</Text>
           </TouchableOpacity>

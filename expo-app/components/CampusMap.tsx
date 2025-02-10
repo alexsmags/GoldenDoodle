@@ -7,8 +7,6 @@ import {
   Switch,
   Text,
   TouchableOpacity,
-  Modal,
-  TouchableWithoutFeedback,
 } from "react-native";
 import CustomMarker from "./CustomMarker";
 import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
@@ -19,6 +17,7 @@ import NavTab from "./NavTab";
 import * as Location from "expo-location";
 import { Building, Coordinates } from "../utils/types";
 import ModalComponent from "./modals/BuildingInfoModal";
+import { getFillColorWithOpacity } from "../utils/helperFunctions";
 
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
@@ -83,6 +82,19 @@ const CampusMap = () => {
     }
   }, [userLocation, destination, selectedBuilding]);
 
+  const fetchRouteWithDestination = useCallback(async (destination: Coordinates) => {
+    if (!userLocation) {
+      Alert.alert("Cannot fetch route without user location");
+      return;
+    }
+
+    const route = await getDirections(userLocation, destination);
+
+    if (route) {
+      setRouteCoordinates(route);
+    }
+  }, [userLocation]);
+
   // Handle marker press to set destination
   const handleMarkerPress = useCallback((coordinate: Coordinates) => {
     // console.log("Setting destination:", coordinate);
@@ -107,23 +119,14 @@ const CampusMap = () => {
     setIsModalVisible(true);
   };
 
-  // Get fill color with opacity
-  const getFillColorWithOpacity = (building: Building) => {
-    const fillColor = building.fillColor;
-    let rgbaColor = fillColor;
-    if (fillColor.startsWith("#")) {
-      const hexToRgb = (hex: any) => {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
-        return `rgba(${r}, ${g}, ${b}, 1)`;
-      };
-      rgbaColor = hexToRgb(fillColor);
-    }
-    const opacity = building.id === selectedBuilding?.id ? 0.8 : 0.4;
-    return rgbaColor.replace(/[\d\.]+\)$/, `${opacity})`);
-  };
+  
 
+  // Handle directions press
+  const onDirectionsPress = useCallback(() => {
+    if (selectedBuilding) {
+      fetchRouteWithDestination(selectedBuilding.coordinates[0]);
+    }
+  }, [selectedBuilding, fetchRouteWithDestination]);
   return (
     <View style={styles.container}>
       <View style={styles.topRightContainer}>
@@ -168,7 +171,7 @@ const CampusMap = () => {
           <Polygon
             key={building.id}
             coordinates={building.coordinates}
-            fillColor={getFillColorWithOpacity(building)}
+            fillColor={getFillColorWithOpacity(building, selectedBuilding)}
             strokeColor={building.strokeColor}
             strokeWidth={2}
             onPress={handleBuildingPressed(building)}
@@ -234,7 +237,8 @@ const CampusMap = () => {
         onNextClassPress={() => Alert.alert("Next Class pressed")}
         onMoreOptionsPress={() => Alert.alert("More Options pressed")}
         onInfoPress={() => setIsModalVisible(true)}
-        onBackPress={() => setSelectedBuilding(null)}
+        onBackPress={() => resetDirections()}
+        onDirectionsPress={onDirectionsPress}
       />
     </View>
   );
