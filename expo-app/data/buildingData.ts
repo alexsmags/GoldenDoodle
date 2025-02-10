@@ -1,4 +1,13 @@
-export const SGWBuildings = [
+export type Building = {
+  id: string;
+  name: string;
+  coordinates: { latitude: number; longitude: number }[];
+  fillColor: string;
+  strokeColor: string;
+};
+
+
+export const SGWBuildings : Building[] = [
   {
     id: 'FB',
     name: 'Faubourg Building',
@@ -126,9 +135,9 @@ export const SGWBuildings = [
   }
 ];
 
-export const LoyolaBuildings = [
+export const LoyolaBuildings : Building[] = [
   {
-    id: 1,
+    id: '1',
     name: "Central Building",
     coordinates: [
       { latitude: 45.458, longitude: -73.640 },

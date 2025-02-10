@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import CustomMarker from "./CustomMarker";
-import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
+import { SGWBuildings, LoyolaBuildings, Building } from "../data/buildingData";
 import { getDirections } from "../utils/directions";
 import { initialRegion, SGWMarkers, LoyolaMarkers } from "./customMarkerData";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -27,6 +27,7 @@ const CampusMap = () => {
   const [destination, setDestination] = useState<Coordinates | null>(null); // Only destination is needed
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null); // User's location is the origin
   const [viewCampusMap, setViewCampusMap] = useState<boolean>(true);
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null);
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
   const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
@@ -52,6 +53,7 @@ const CampusMap = () => {
   const resetDirections = () => {
     setRouteCoordinates([]);
     setDestination(null);
+    setSelectedBuildingId(null);
   };
 
   // Fetch route from user's location to destination
@@ -67,9 +69,8 @@ const CampusMap = () => {
     }
   }, [userLocation, destination]);
 
-  // Handle long press on the map to set destination
-  const handleMapPress = useCallback((event: any) => {
-    const coordinate = event.nativeEvent.coordinate;
+  // Handle marker press to set destination
+  const handleMarkerPress = useCallback((coordinate: Coordinates) => {
     console.log("Setting destination:", coordinate);
     setDestination(coordinate);
   }, []);
@@ -79,6 +80,38 @@ const CampusMap = () => {
     setCampus((prevCampus) => (prevCampus === "SGW" ? "Loyola" : "SGW"));
     resetDirections();
   }, []);
+
+  // Handle building press to show building info
+  const handleBuildingPressed = (buildingId: string) => () => {
+    if (selectedBuildingId === buildingId) {
+      setSelectedBuildingId(null);
+      return;
+    }
+    console.log("Building pressed:", buildingId);
+    setSelectedBuildingId(buildingId);
+  };
+
+  const getFillColorWithOpacity = (building : Building, selectedBuildingId: string | null) => {
+    // Extract the fillColor from the building object
+    const fillColor = building.fillColor;
+
+    // Convert hex to RGBA if necessary
+    let rgbaColor = fillColor;
+    if (fillColor.startsWith("#")) {
+      // Convert hex to RGBA
+      const hexToRgb = (hex : any) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, 1)`;
+      };
+      rgbaColor = hexToRgb(fillColor);
+    }
+
+    // Adjust the opacity based on whether the building is selected
+    const opacity = building.id === selectedBuildingId ? 0.8 : 0.4;
+    return rgbaColor.replace(/[\d\.]+\)$/, `${opacity})`);
+  };
 
   return (
     <View style={styles.container}>
@@ -107,7 +140,6 @@ const CampusMap = () => {
         loadingEnabled={true}
         scrollEnabled={true}
         zoomEnabled={true}
-        onLongPress={handleMapPress}
       >
         {/* Render Markers */}
         {markers.map((marker) => (
@@ -116,6 +148,7 @@ const CampusMap = () => {
             coordinate={marker.coordinate}
             title={marker.title}
             description={marker.description}
+            onPress={() => handleMarkerPress(marker.coordinate)} // Pass the onPress handler
           />
         ))}
 
@@ -124,9 +157,10 @@ const CampusMap = () => {
           <Polygon
             key={building.id}
             coordinates={building.coordinates}
-            fillColor={building.fillColor}
+            fillColor={getFillColorWithOpacity(building, selectedBuildingId)}
             strokeColor={building.strokeColor}
             strokeWidth={2}
+            onPress={handleBuildingPressed(building.id)}
           />
         ))}
 
@@ -168,7 +202,6 @@ const CampusMap = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, position: "relative" },
-  
   map: { flex: 1 },
   topRightContainer: {
     position: "absolute",
