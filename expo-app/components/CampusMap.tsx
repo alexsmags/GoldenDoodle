@@ -204,7 +204,7 @@ const CampusMap = () => {
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         title={selectedBuilding?.name || "Building Information"}
-        description={selectedBuilding?.description}
+        description={selectedBuilding?.description || "No description available"}
         footerContent={
           <TouchableOpacity
             style={styles.navigateButton}
@@ -234,6 +234,7 @@ const CampusMap = () => {
         onNextClassPress={() => Alert.alert("Next Class pressed")}
         onMoreOptionsPress={() => Alert.alert("More Options pressed")}
         onInfoPress={() => setIsModalVisible(true)}
+        onBackPress={() => setSelectedBuilding(null)}
       />
     </View>
   );
