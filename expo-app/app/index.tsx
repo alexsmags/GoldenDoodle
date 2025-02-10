@@ -6,6 +6,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <CampusMap /> {/* Render the CampusMap component */}
+      {/* <NavTab /> Render the NavTab component */}
     </View>
   );
 }
