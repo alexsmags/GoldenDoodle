@@ -142,13 +142,65 @@ export const SGWBuildings : Building[] = [
 
 export const LoyolaBuildings : Building[] = [
   {
-    id: '1',
-    name: "Central Building",
+    id: 'CW',
+    name: "Central Wing,",
     coordinates: [
-      { latitude: 45.458, longitude: -73.640 },
-      { latitude: 45.4575, longitude: -73.640 },
-      { latitude: 45.4575, longitude: -73.6395 },
-      { latitude: 45.458, longitude: -73.6395 }
+      { latitude: 45.45843, longitude: -73.64142 },
+      { latitude: 45.45934, longitude: -73.64074 },
+      { latitude: 45.45838, longitude: -73.6383 },
+      { latitude: 45.45755, longitude: -73.63923 }
+    ],
+    fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
+    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+  },
+  {
+    id: 'LW',
+    name: "Left Wing,",
+    coordinates: [
+      { latitude: 45.45843, longitude: -73.64142 },
+      { latitude: 45.45755, longitude: -73.63923 },
+      { latitude: 45.45661, longitude: -73.64028 },
+      { latitude: 45.45735, longitude: -73.64224 }
+    ],
+    fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
+    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+  },
+  {
+    id: 'RW',
+    name: "Right Wing,",
+    coordinates: [
+      { latitude: 45.45934, longitude: -73.64074 },
+      { latitude: 45.45838, longitude: -73.6383 },
+      { latitude: 45.45922, longitude: -73.63732 },
+      { latitude: 45.46035, longitude: -73.64026 }
+    ],
+    fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
+    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+  },
+  {
+    id: 'NW',
+    name: "North Wing,",
+    coordinates: [
+      { latitude: 45.45959, longitude: -73.64064 },
+      { latitude: 45.45799, longitude: -73.64187 },
+      { latitude: 45.45823, longitude: -73.64253 },
+      { latitude: 45.45799, longitude: -73.64271 },
+      { latitude: 45.45828, longitude: -73.6436 },
+      { latitude: 45.46006, longitude: -73.64207 }
+    ],
+    fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
+    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+  },
+  {
+    id: 'SW',
+    name: "South Wing,",
+    coordinates: [
+        { latitude: 45.45718, longitude: -73.63945 },
+        { latitude: 45.45668, longitude: -73.63819 },
+        { latitude: 45.45602, longitude: -73.63872 },
+        { latitude: 45.45582, longitude: -73.63807 },
+        { latitude: 45.45777, longitude: -73.63431 },
+        { latitude: 45.45912, longitude: -73.63723 }
     ],
     fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
     strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
