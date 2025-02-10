@@ -29,7 +29,7 @@ const CampusMap = () => {
   const [destination, setDestination] = useState<Coordinates | null>(null);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [viewCampusMap, setViewCampusMap] = useState<boolean>(true);
-  const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
     null
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Modal visibility state
@@ -58,7 +58,7 @@ const CampusMap = () => {
   const resetDirections = () => {
     setRouteCoordinates([]);
     setDestination(null);
-    setSelectedBuildingId(null);
+    setSelectedBuilding(null);
   };
 
   // Fetch route from user's location to destination
@@ -87,24 +87,20 @@ const CampusMap = () => {
   }, []);
 
   // Handle building press to show building info
-  const handleBuildingPressed = (buildingId: string) => () => {
-    if (selectedBuildingId === buildingId) {
-      setSelectedBuildingId(null);
+  const handleBuildingPressed = (building: Building) => () => {
+    if (selectedBuilding?.id === building.id) {
+      setSelectedBuilding(null);
       setIsModalVisible(false); // Close modal if the same building is clicked again
       return;
     }
-    console.log("Building pressed:", buildingId);
-    setSelectedBuildingId(buildingId);
+    console.log("Building pressed:", building);
+    setSelectedBuilding(building);
     setIsModalVisible(true); // Open modal
   };
-
-  // Get the selected building object
-  const selectedBuilding = buildings.find((b) => b.id === selectedBuildingId);
 
   // Get fill color with opacity
   const getFillColorWithOpacity = (
     building: Building,
-    selectedBuildingId: string | null
   ) => {
     const fillColor = building.fillColor;
     let rgbaColor = fillColor;
@@ -117,7 +113,7 @@ const CampusMap = () => {
       };
       rgbaColor = hexToRgb(fillColor);
     }
-    const opacity = building.id === selectedBuildingId ? 0.8 : 0.4;
+    const opacity = building.id === selectedBuilding?.id ? 0.8 : 0.4;
     return rgbaColor.replace(/[\d\.]+\)$/, `${opacity})`);
   };
 
@@ -165,10 +161,10 @@ const CampusMap = () => {
           <Polygon
             key={building.id}
             coordinates={building.coordinates}
-            fillColor={getFillColorWithOpacity(building, selectedBuildingId)}
+            fillColor={getFillColorWithOpacity(building)}
             strokeColor={building.strokeColor}
             strokeWidth={2}
-            onPress={handleBuildingPressed(building.id)}
+            onPress={handleBuildingPressed(building)}
           />
         ))}
 
