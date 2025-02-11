@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#990000",
+    color: "#912338",
     marginBottom: 10,
   },
   infoText: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   backButton: {
     marginTop: 30,
     padding: 10,
-    backgroundColor: "#990000",
+    backgroundColor: "#912338",
     borderRadius: 5,
   },
   backButtonText: {

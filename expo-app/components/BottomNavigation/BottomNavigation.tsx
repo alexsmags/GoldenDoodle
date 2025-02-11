@@ -13,7 +13,7 @@ export default function BottomNavigation() {
           style={styles.tab}
           onPress={() => setActiveTab(tab.label)}
         >
-          <FontAwesome5 name={tab.icon} size={22} color={activeTab === tab.label ? "#990000" : "#999"} />
+          <FontAwesome5 name={tab.icon} size={22} color={activeTab === tab.label ? "#912338" : "#999"} />
           <Text style={[styles.label, activeTab === tab.label && styles.activeLabel]}>
             {tab.label} {/* ✅ Wraps text inside <Text> */}
           </Text>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingVertical: 10,
+    paddingVertical: 25,
     borderTopWidth: 1,
     borderColor: "#ddd",
     backgroundColor: "#fff",
@@ -43,12 +43,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   label: {
-    fontSize: 12,
+    fontSize: 15,
     color: "#999",
     marginTop: 3,
   },
   activeLabel: {
-    color: "#990000",
+    color: "#912338",
     fontWeight: "bold",
   },
 });

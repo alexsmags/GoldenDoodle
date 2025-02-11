@@ -6,17 +6,17 @@ const QuickShortcuts = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.shortcut}>
-        <FontAwesome5 name="utensils" size={24} color="#990000" />
+        <FontAwesome5 name="utensils" size={24} color="#912338" />
         <Text style={styles.text}>Food</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.shortcut}>
-        <FontAwesome5 name="toilet" size={24} color="#990000" />
+        <FontAwesome5 name="toilet" size={24} color="#912338" />
         <Text style={styles.text}>Bathroom</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.shortcut}>
-        <FontAwesome5 name="cocktail" size={24} color="#990000" />
+        <FontAwesome5 name="cocktail" size={24} color="#912338" />
         <Text style={styles.text}>Bar</Text>
       </TouchableOpacity>
     </View>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#990000",
+    color: "#912338",
     marginTop: 5,
   },
 });

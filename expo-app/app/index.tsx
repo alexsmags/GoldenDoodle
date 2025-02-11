@@ -10,18 +10,20 @@ import BottomNavigation from "../components/BottomNavigation/BottomNavigation";
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Header />
+      {/* ⬇️ Wrap Header with a View to apply padding */}
+      <View style={styles.headerContainer}>
+        <Header />
+      </View>
+
       <View style={styles.content}>
-        <Text style={styles.infoText}>
-          Find your next study spot or coffee stop.
-        </Text>
         <ButtonSection />
         <SearchBar /> {/* 🔍 Add Search Bar Below Buttons */}
         <QuickShortcuts />
         <HottestSpots />
         <ShuttleSchedule /> {/* 🚌 Add Shuttle Schedule Here */}
       </View>
-      <BottomNavigation />
+
+      <BottomNavigation/>
     </View>
   );
 }
@@ -32,14 +34,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
     justifyContent: "space-between",
   },
+  headerContainer: {
+  },
   content: {
     marginTop: 220,
     alignItems: "center",
-  },
-  infoText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
-    marginBottom: 10,
   },
 });

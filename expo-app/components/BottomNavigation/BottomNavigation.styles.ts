@@ -6,7 +6,7 @@ export default StyleSheet.create({
         justifyContent: "space-around",
         alignItems: "center",
         backgroundColor: "#fff",
-        paddingVertical: 10,
+        paddingVertical: 20,
         borderTopWidth: 2,
         borderTopColor: "#ddd",
         position: "absolute",
@@ -23,7 +23,7 @@ export default StyleSheet.create({
         marginTop: 4,
     },
     activeText: {
-        color: "#990000",
+        color: "#912338",
         fontWeight: "600",
     },
 });

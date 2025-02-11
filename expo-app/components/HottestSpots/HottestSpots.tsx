@@ -6,7 +6,7 @@ const HottestSpots = () => {
   return (
     <View style={styles.container}>
       {/* Flame Icon */}
-      <FontAwesome5 name="fire" size={24} color="#990000" />
+      <FontAwesome5 name="fire" size={24} color="#912338" />
 
       {/* Title */}
       <Text style={styles.text}>
