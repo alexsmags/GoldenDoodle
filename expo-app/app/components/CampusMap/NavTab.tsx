@@ -39,14 +39,13 @@ const NavTab = ({
             <Text style={styles.tabText}>Navigate</Text>
           </TouchableOpacity>
 
-          {/* I didnt like the way this look -- user should press the campus they want to travel too */}
           {/* Loyola/SGW Travel (Empty Navigation Arrow Icon) */}
-          {/* <TouchableOpacity style={styles.tabItem} onPress={onTravelPress}>
+          <TouchableOpacity style={styles.tabItem} onPress={onTravelPress}>
             <MaterialIcons name="navigation" size={24} color="black" />
             <Text style={styles.tabText}>
               {campus === "SGW" ? "Loyola Travel" : "SGW Travel"}
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
           {/* Eat on Campus (Fork and Knife Icon) */}
           <TouchableOpacity style={styles.tabItem} onPress={onEatPress}>

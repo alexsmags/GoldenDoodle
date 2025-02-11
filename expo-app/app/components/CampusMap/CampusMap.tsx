@@ -252,7 +252,7 @@ const CampusMap = () => {
         campus={campus}
         selectedBuilding={selectedBuilding}
         onNavigatePress={fetchRoute}
-        onTravelPress={() => Alert.alert("Travel pressed")}
+        onTravelPress={() => fetchRouteWithDestination(initialRegion[campus])}
         onEatPress={() => setViewEatingOnCampus((prevValue) => !prevValue)}
         onNextClassPress={() => setIsNextClassModalVisible(true)}
         onMoreOptionsPress={() => Alert.alert("More Options pressed")}
