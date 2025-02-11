@@ -82,18 +82,21 @@ const CampusMap = () => {
     }
   }, [userLocation, destination, selectedBuilding]);
 
-  const fetchRouteWithDestination = useCallback(async (destination: Coordinates) => {
-    if (!userLocation) {
-      Alert.alert("Cannot fetch route without user location");
-      return;
-    }
+  const fetchRouteWithDestination = useCallback(
+    async (destination: Coordinates) => {
+      if (!userLocation) {
+        Alert.alert("Cannot fetch route without user location");
+        return;
+      }
 
-    const route = await getDirections(userLocation, destination);
+      const route = await getDirections(userLocation, destination);
 
-    if (route) {
-      setRouteCoordinates(route);
-    }
-  }, [userLocation]);
+      if (route) {
+        setRouteCoordinates(route);
+      }
+    },
+    [userLocation, destination]
+  );
 
   // Handle marker press to set destination
   const handleMarkerPress = useCallback((coordinate: Coordinates) => {
@@ -141,12 +144,15 @@ const CampusMap = () => {
           <Text style={styles.switchText}>View Campus Map</Text>
           <Switch
             value={viewCampusMap}
-            onValueChange={(value) => setViewCampusMap(value)}
+            onValueChange={(value) =>
+              setViewCampusMap((prevValue) => !prevValue)
+            }
           />
         </View>
       </View>
 
       <MapView
+        key={viewCampusMap ? "map-visible" : "map-hidden"} // Re-render map when viewCampusMap changes
         style={styles.map}
         region={initialRegion[campus]}
         showsUserLocation={true}
@@ -154,29 +160,32 @@ const CampusMap = () => {
         scrollEnabled={true}
         zoomEnabled={true}
       >
-        {/* Render Markers */}
-        {markers.map((marker) => (
-          <CustomMarker
-            key={marker.id}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
-            onPress={() => handleMarkerPress(marker.coordinate)}
-          />
-        ))}
+        {viewCampusMap && (
+          <>
+            {/* Render Markers */}
+            {markers.map((marker) => (
+              <CustomMarker
+                key={marker.id}
+                coordinate={marker.coordinate}
+                title={marker.title}
+                description={marker.description}
+                onPress={() => handleMarkerPress(marker.coordinate)}
+              />
+            ))}
 
-        {/* Render Polygons */}
-        {buildings.map((building) => (
-          <Polygon
-            key={building.id}
-            coordinates={building.coordinates}
-            fillColor={getFillColorWithOpacity(building, selectedBuilding)}
-            strokeColor={building.strokeColor}
-            strokeWidth={2}
-            onPress={handleBuildingPressed(building)}
-          />
-        ))}
-
+            {/* Render Polygons */}
+            {buildings.map((building) => (
+              <Polygon
+                key={building.id}
+                coordinates={building.coordinates}
+                fillColor={getFillColorWithOpacity(building, selectedBuilding)}
+                strokeColor={building.strokeColor}
+                strokeWidth={2}
+                onPress={handleBuildingPressed(building)}
+              />
+            ))}
+          </>
+        )}
         {/* Render Polyline for Route */}
         {routeCoordinates.length > 0 && (
           <Polyline
@@ -185,12 +194,10 @@ const CampusMap = () => {
             strokeColor="blue"
           />
         )}
-
         {/* Render Destination Marker */}
         {destination && (
           <Marker coordinate={destination} pinColor="red" title="Destination" />
         )}
-
       </MapView>
 
       {/* Modal for Building Info */}
@@ -198,7 +205,9 @@ const CampusMap = () => {
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         title={selectedBuilding?.name || "Building Information"}
-        description={selectedBuilding?.description || "No description available"}
+        description={
+          selectedBuilding?.description || "No description available"
+        }
         footerContent={
           <TouchableOpacity
             style={styles.navigateButton}
