@@ -11,7 +11,7 @@ export default StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.4)", // Dark transparent overlay
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
   container: {
     flex: 1,
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 12,
-    marginTop: 25,  // ⬆️ Increased value slightly
+    marginTop: 25, 
     marginBottom: 15,
   },
   routeButtonText: {

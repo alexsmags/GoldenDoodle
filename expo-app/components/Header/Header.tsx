@@ -17,7 +17,7 @@ export default function Header(): JSX.Element {
 
       <View style={styles.container}>
         {/* Hamburger Menu */}
-        <TouchableOpacity style={styles.menuButton} onPress={() => router.push("/menu")}>
+        <TouchableOpacity style={styles.menuButton} onPress={() => router.push("/screens/Home/HomeMenuScreen")}>
           <Feather name="menu" size={28} color="white" />
         </TouchableOpacity>
 

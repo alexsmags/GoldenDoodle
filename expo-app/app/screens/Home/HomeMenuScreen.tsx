@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-export default function Menu() {
+export default function HomeMenuScreen() {
   const router = useRouter();
 
   return (
@@ -19,7 +19,7 @@ export default function Menu() {
       <TouchableOpacity 
         style={styles.menuItem} 
         activeOpacity={0.8} 
-        onPress={() => router.push("/campus-map")}
+        onPress={() => router.push("/screens/Home/CampusMapScreen")}
       >
         <Text style={styles.menuText}>📍 Campus Map</Text>
       </TouchableOpacity>
@@ -27,7 +27,7 @@ export default function Menu() {
       <TouchableOpacity 
         style={styles.menuItem} 
         activeOpacity={0.8} 
-        onPress={() => router.push("/shuttle-schedule")}
+        onPress={() => router.push("/screens/Home/CampusMapScreen")}
       >
         <Text style={styles.menuText}>🚌 Shuttle Schedule</Text>
       </TouchableOpacity>
@@ -35,7 +35,7 @@ export default function Menu() {
       <TouchableOpacity 
         style={styles.menuItem} 
         activeOpacity={0.8} 
-        onPress={() => router.push("/study-spots")}
+        onPress={() => router.push("/screens/Home/StudySpotsScreen")}
       >
         <Text style={styles.menuText}>📖 Study Spots</Text>
       </TouchableOpacity>

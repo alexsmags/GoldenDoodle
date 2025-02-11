@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import CampusMapping from "./components/CampusMap/CampusMap";
+import CampusMapping from "../../components/CampusMap/CampusMap";
 import { useRouter } from "expo-router";
 
 export default function CampusMapScreen() {
