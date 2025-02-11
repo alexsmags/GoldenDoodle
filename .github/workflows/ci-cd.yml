@@ -15,7 +15,7 @@ on:
       - bugfix/*
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,7 +33,6 @@ jobs:
       - name: Install Expo CLI
         run: npm install expo-cli
         working-directory: expo-app
-
 
       - name: Install dependencies
         run: npm install
@@ -55,17 +54,22 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
-      - name: Start Expo Server and Wait
-        run: |
-          npx expo start --web &
-          sleep 20
-        working-directory: expo-app
-        timeout-minutes: 5
+  sonar:
+    needs: test 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Stop Expo Server
-        if: always()
-        run: pkill -f "expo start"
-        
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: expo-app/package-lock.json
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
@@ -77,5 +81,6 @@ jobs:
             -Dsonar.projectKey=alexsmags_GoldenDoodle
             -Dsonar.sources=expo-app/app
             -Dsonar.tests=expo-app/__tests__
+            -Dsonar.test.inclusions=expo-app/__tests__/**/*.test.{js,ts,tsx}
+            -Dsonar.exclusions=expo-app/node_modules/**,expo-app/coverage/**,expo-app/__tests__/**
             -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
-
