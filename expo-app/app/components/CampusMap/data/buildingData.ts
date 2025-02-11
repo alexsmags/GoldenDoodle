@@ -11,7 +11,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49469, longitude: -73.57806 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)", // Semi-Transparent blue
-    strokeColor: "rgba(0, 0, 255, 1)" // Solid blue outline
+    strokeColor: "rgba(0, 0, 255, 1)", // Solid blue outline
+    campus: "SGW"
   },
   {
     id: 'FG',
@@ -23,7 +24,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49383, longitude: -73.57911 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'MB',
@@ -35,20 +37,21 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49535, longitude: -73.57941 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'GM',
     name: 'Guy-De Maisonneuve Building',
     coordinates: [
-
       { latitude: 45.49616, longitude: -73.57888 },
       { latitude: 45.49597, longitude: -73.57842 },
       { latitude: 45.49559, longitude: -73.57888 },
       { latitude: 45.49577, longitude: -73.57914 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'EV',
@@ -62,7 +65,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49559, longitude: -73.57880 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'LS',
@@ -74,7 +78,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49656, longitude: -73.57959 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'ER',
@@ -86,7 +91,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.4967, longitude: -73.58012  }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'H',
@@ -98,7 +104,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49720, longitude: -73.57959 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'LB',
@@ -112,7 +119,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49669, longitude: -73.57863 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'VA',
@@ -124,7 +132,8 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49532, longitude: -73.57371 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   },
   {
     id: 'GN',
@@ -136,49 +145,53 @@ export const SGWBuildings : Building[] = [
       { latitude: 45.49333, longitude: -73.57835 }
     ],
     fillColor: "rgba(0, 100, 255, 0.5)",
-    strokeColor: "rgba(0, 0, 255, 1)"
+    strokeColor: "rgba(0, 0, 255, 1)",
+    campus: "SGW"
   }
 ];
 
-export const LoyolaBuildings : Building[] = [
+export const LoyolaBuildings: Building[] = [
   {
-    id: 'CW',
+    id: "CW",
     name: "Central Wing,",
     coordinates: [
       { latitude: 45.45843, longitude: -73.64142 },
       { latitude: 45.45934, longitude: -73.64074 },
       { latitude: 45.45838, longitude: -73.6383 },
-      { latitude: 45.45755, longitude: -73.63923 }
+      { latitude: 45.45755, longitude: -73.63923 },
     ],
     fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
-    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+    strokeColor: "rgba(255, 140, 0, 1)", // Solid orange outline
+    campus: "Loyola",
   },
   {
-    id: 'LW',
+    id: "LW",
     name: "Left Wing,",
     coordinates: [
       { latitude: 45.45843, longitude: -73.64142 },
       { latitude: 45.45755, longitude: -73.63923 },
       { latitude: 45.45661, longitude: -73.64028 },
-      { latitude: 45.45735, longitude: -73.64224 }
+      { latitude: 45.45735, longitude: -73.64224 },
     ],
     fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
-    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+    strokeColor: "rgba(255, 140, 0, 1)", // Solid orange outline
+    campus: "Loyola",
   },
   {
-    id: 'RW',
+    id: "RW",
     name: "Right Wing,",
     coordinates: [
       { latitude: 45.45934, longitude: -73.64074 },
       { latitude: 45.45838, longitude: -73.6383 },
       { latitude: 45.45922, longitude: -73.63732 },
-      { latitude: 45.46035, longitude: -73.64026 }
+      { latitude: 45.46035, longitude: -73.64026 },
     ],
     fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
-    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+    strokeColor: "rgba(255, 140, 0, 1)", // Solid orange outline
+    campus: "Loyola",
   },
   {
-    id: 'NW',
+    id: "NW",
     name: "North Wing,",
     coordinates: [
       { latitude: 45.45959, longitude: -73.64064 },
@@ -186,23 +199,25 @@ export const LoyolaBuildings : Building[] = [
       { latitude: 45.45823, longitude: -73.64253 },
       { latitude: 45.45799, longitude: -73.64271 },
       { latitude: 45.45828, longitude: -73.6436 },
-      { latitude: 45.46006, longitude: -73.64207 }
+      { latitude: 45.46006, longitude: -73.64207 },
     ],
     fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
-    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
+    strokeColor: "rgba(255, 140, 0, 1)", // Solid orange outline
+    campus: "Loyola",
   },
   {
-    id: 'SW',
+    id: "SW",
     name: "South Wing,",
     coordinates: [
-        { latitude: 45.45718, longitude: -73.63945 },
-        { latitude: 45.45668, longitude: -73.63819 },
-        { latitude: 45.45602, longitude: -73.63872 },
-        { latitude: 45.45582, longitude: -73.63807 },
-        { latitude: 45.45777, longitude: -73.63431 },
-        { latitude: 45.45912, longitude: -73.63723 }
+      { latitude: 45.45718, longitude: -73.63945 },
+      { latitude: 45.45668, longitude: -73.63819 },
+      { latitude: 45.45602, longitude: -73.63872 },
+      { latitude: 45.45582, longitude: -73.63807 },
+      { latitude: 45.45777, longitude: -73.63431 },
+      { latitude: 45.45912, longitude: -73.63723 },
     ],
     fillColor: "rgba(255, 165, 0, 0.5)", // Semi-Transparent orange
-    strokeColor: "rgba(255, 140, 0, 1)" // Solid orange outline
-  }
+    strokeColor: "rgba(255, 140, 0, 1)", // Solid orange outline
+    campus: "Loyola",
+  },
 ];

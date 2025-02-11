@@ -12,6 +12,7 @@ export type Building = {
   fillColor: string;
   strokeColor: string;
   description?: string;
+  campus: Campus;
 };
 
 export type CustomMarker = {
@@ -20,4 +21,24 @@ export type CustomMarker = {
   description: string;
   coordinate: Coordinates;
   campus?: Campus;
+};
+
+export type RoomLocation = {
+  room: string;
+  building: string;
+  campus: Campus;
+}
+
+export type GoogleCalendarEvent = {
+  id: string;
+  summary: string;
+  location: string;
+  start: {
+    dateTime: string;
+    timeZone: string;
+  };
+  end: {
+    dateTime: string;
+    timeZone: string;
+  };
 };

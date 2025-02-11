@@ -23,6 +23,7 @@ import { Building, Coordinates } from "../../utils/types";
 import ModalComponent from "./modals/BuildingInfoModal";
 import { getFillColorWithOpacity } from "../../utils/helperFunctions";
 import { eatingOnCampusData } from "./data/eatingOnCampusData";
+import NextClassModal from "./modals/NextClassModal";
 
 
 const CampusMap = () => {
@@ -35,6 +36,7 @@ const CampusMap = () => {
     null
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isNextClassModalVisible, setIsNextClassModalVisible] = useState<boolean>(false);
   const [viewEatingOnCampus, setViewEatingOnCampus] = useState<boolean>(false);
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
@@ -251,13 +253,20 @@ const CampusMap = () => {
         }
       />
 
+      <NextClassModal 
+        visible={isNextClassModalVisible}
+        onClose={()=>setIsNextClassModalVisible(false)}
+        fetchRouteWithDestination={fetchRouteWithDestination}
+        buildingData={buildings}
+      />
+
       <NavTab
         campus={campus}
         selectedBuilding={selectedBuilding}
         onNavigatePress={fetchRoute}
         onTravelPress={() => Alert.alert("Travel pressed")}
         onEatPress={() => setViewEatingOnCampus((prevValue) => !prevValue)}
-        onNextClassPress={() => Alert.alert("Next Class pressed")}
+        onNextClassPress={() => setIsNextClassModalVisible(true)}
         onMoreOptionsPress={() => Alert.alert("More Options pressed")}
         onInfoPress={() => setIsModalVisible(true)}
         onBackPress={() => resetDirections()}
