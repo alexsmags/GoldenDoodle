@@ -16,7 +16,6 @@ import {
   SGWMarkers,
   LoyolaMarkers,
 } from "./data/customMarkerData";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import NavTab from "./NavTab";
 import * as Location from "expo-location";
 import { Building, Coordinates } from "../../utils/types";
@@ -24,6 +23,7 @@ import ModalComponent from "./modals/BuildingInfoModal";
 import { getFillColorWithOpacity } from "../../utils/helperFunctions";
 import { eatingOnCampusData } from "./data/eatingOnCampusData";
 import NextClassModal from "./modals/NextClassModal";
+import HamburgerWidget from "./HamburgerWidget";
 
 
 const CampusMap = () => {
@@ -140,25 +140,13 @@ const CampusMap = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topRightContainer}>
-        <TouchableOpacity style={styles.buttonContainer} onPress={toggleCampus}>
-          <Text style={styles.buttonText}>
-            <MaterialIcons name="arrow-upward" size={16} color="black" />
-            <MaterialIcons name="arrow-downward" size={16} color="black" />
-            View {campus === "SGW" ? "Loyola Campus" : "SGW Campus"}
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.switchContainer}>
-          <Text style={styles.switchText}>View Campus Map</Text>
-          <Switch
-            value={viewCampusMap}
-            onValueChange={(value) =>
-              setViewCampusMap((prevValue) => !prevValue)
-            }
-          />
-        </View>
-      </View>
+      {/* Movable Hamburger Widget */}
+      <HamburgerWidget
+        toggleCampus={toggleCampus}
+        viewCampusMap={viewCampusMap}
+        setViewCampusMap={setViewCampusMap}
+        campus={campus}
+      />
 
       <MapView
         key={viewCampusMap ? "map-visible" : "map-hidden"} // Re-render map when viewCampusMap changes
@@ -253,9 +241,9 @@ const CampusMap = () => {
         }
       />
 
-      <NextClassModal 
+      <NextClassModal
         visible={isNextClassModalVisible}
-        onClose={()=>setIsNextClassModalVisible(false)}
+        onClose={() => setIsNextClassModalVisible(false)}
         fetchRouteWithDestination={fetchRouteWithDestination}
         buildingData={buildings}
       />
@@ -279,35 +267,8 @@ const CampusMap = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, position: "relative" },
   map: { flex: 1 },
-  topRightContainer: {
-    position: "absolute",
-    bottom: 100,
-    right: 10,
-    zIndex: 1,
-    flexDirection: "column",
-    alignItems: "flex-end",
-  },
-  buttonContainer: {
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "black",
-    padding: 10,
-    marginBottom: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: { fontSize: 14, fontWeight: "bold" },
-  switchContainer: {
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "black",
-    padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  switchText: { marginRight: 5, fontSize: 12, fontWeight: "bold" },
+  
+  
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
