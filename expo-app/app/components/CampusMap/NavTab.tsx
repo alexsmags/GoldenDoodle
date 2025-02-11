@@ -1,9 +1,9 @@
-import React from "react";
-import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { Building } from "../../utils/types";
 
-type NavTabProps = {
+interface NavTabProps {
   campus: "SGW" | "Loyola";
   selectedBuilding: Building | null;
   onNavigatePress?: () => void;
@@ -14,9 +14,9 @@ type NavTabProps = {
   onInfoPress?: () => void;
   onBackPress?: () => void;
   onDirectionsPress?: () => void;
-};
+}
 
-const NavTab = ({
+const NavTab: React.FC<NavTabProps> = ({
   campus,
   selectedBuilding,
   onNavigatePress,
@@ -24,94 +24,82 @@ const NavTab = ({
   onEatPress,
   onNextClassPress,
   onMoreOptionsPress,
-  onInfoPress, 
+  onInfoPress,
   onBackPress,
   onDirectionsPress,
-}: NavTabProps) => {
-  // console.log("NavTab is rendering!"); // Debugging line
+}) => {
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+
+  const NAV_ITEMS = selectedBuilding
+    ? [
+        { label: "Back", icon: "arrow-left", action: onBackPress },
+        { label: "Info", icon: "info-circle", action: onInfoPress },
+        { label: "Directions", icon: "route", action: onDirectionsPress },
+      ]
+    : [
+        { label: "Navigate", icon: "compass", action: onNavigatePress },
+        {
+          label: campus === "SGW" ? "Loyola" : "SGW",
+          icon: "location-arrow",
+          action: onTravelPress,
+        },
+        { label: "Eat", icon: "utensils", action: onEatPress },
+        { label: "Class", icon: "calendar-alt", action: onNextClassPress },
+        { label: "More", icon: "ellipsis-h", action: onMoreOptionsPress },
+      ];
+
   return (
-    <SafeAreaView style={styles.navTab}>
-      {!selectedBuilding ? ( // Show different tabs when building will be pressed to show building info
-        <>
-          {/* Navigate (Campus Icon) */}
-          <TouchableOpacity style={styles.tabItem} onPress={onNavigatePress}>
-            <Ionicons name="compass" size={24} color="black" />
-            <Text style={styles.tabText}>Navigate</Text>
-          </TouchableOpacity>
-
-          {/* Loyola/SGW Travel (Empty Navigation Arrow Icon) */}
-          <TouchableOpacity style={styles.tabItem} onPress={onTravelPress}>
-            <MaterialIcons name="navigation" size={24} color="black" />
-            <Text style={styles.tabText}>
-              {campus === "SGW" ? "Loyola Travel" : "SGW Travel"}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Eat on Campus (Fork and Knife Icon) */}
-          <TouchableOpacity style={styles.tabItem} onPress={onEatPress}>
-            <FontAwesome name="cutlery" size={24} color="black" />
-            <Text style={styles.tabText}>Eat on Campus</Text>
-          </TouchableOpacity>
-
-          {/* Next Class (Schedule Icon) */}
-          <TouchableOpacity style={styles.tabItem} onPress={onNextClassPress}>
-            <MaterialIcons name="schedule" size={24} color="black" />
-            <Text style={styles.tabText}>Next Class</Text>
-          </TouchableOpacity>
-
-          {/* More Options (Three Dots Icon) */}
-          <TouchableOpacity style={styles.tabItem} onPress={onMoreOptionsPress}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-            <Text style={styles.tabText}>More Options</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          {/* Back Icon  */}
-          <TouchableOpacity style={styles.tabItem} onPress={onBackPress}>
-            <Ionicons name="arrow-back" size={24} color="black" />
-            <Text style={styles.tabText}>Back</Text>
-          </TouchableOpacity>
-
-          {/* Show different tabs when origin and destination are set */}
-          <TouchableOpacity style={styles.tabItem} onPress={onInfoPress}>
-            <Ionicons name="information-circle" size={24} color="black" />
-            <Text style={styles.tabText}>Info about building</Text>
-          </TouchableOpacity>
-
-          {/* Directions -- this allows the user to press this to find directions from current position to the building */}
-          <TouchableOpacity style={styles.tabItem} onPress={onDirectionsPress}>
-            <Ionicons name="navigate" size={24} color="black" />
-            <Text style={styles.tabText}>Directions</Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </SafeAreaView>
+    <View style={styles.navContainer}>
+      {NAV_ITEMS.map((item) => (
+        <TouchableOpacity
+          key={item.label}
+          style={styles.navItem}
+          onPress={() => {
+            setActiveTab(item.label);
+            item.action && item.action();
+          }}
+        >
+          <FontAwesome5 name={item.icon} size={24} color={activeTab === item.label ? "#fff" : "#ddd"} />
+          <Text style={[styles.navText, activeTab === item.label && styles.activeText]}>
+            {item.label}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  navTab: {
-    position: "relative",
+  navContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "#912338",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "black",
-    width: "100%",
-  },
-
-  tabItem: {
+    justifyContent: "space-between", 
     alignItems: "center",
-    paddingTop: 10,
-    paddingBottom: 0,
-    marginBottom:0,
+    backgroundColor: "#912338",
+    paddingVertical: 16,
+    borderTopWidth: 2,
+    borderTopColor: "#731b2b",
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    paddingHorizontal: 10,
   },
-  tabText: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginTop: 5,
+  navItem: {
+    flex: 1, 
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+    maxWidth: 80, 
+  },
+  navText: {
+    fontSize: 16, 
+    color: "#ddd",
+    marginTop: 3, 
+    flexWrap: "nowrap", 
+    textAlign: "center",
+  },
+  activeText: {
+    color: "#fff",
+    fontWeight: "600",
   },
 });
 

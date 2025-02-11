@@ -6,7 +6,7 @@ export default function ShuttleSchedule() {
   return (
     <View style={styles.container}>
       {/* Bus Icon (Left-Aligned) */}
-      <FontAwesome5 name="bus" size={30} color="#990000" style={styles.busIcon} />
+      <FontAwesome5 name="bus" size={30} color="#912338" style={styles.busIcon} />
 
       {/* Shuttle Timings & Route */}
       <View style={styles.scheduleWrapper}>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: "#990000",
+    borderColor: "#912338",
     shadowColor: "#000",
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.1,
@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#990000",
+    color: "#912338",
   },
   routeLabel: {
-    backgroundColor: "#990000",
+    backgroundColor: "#912338",
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderTopLeftRadius: 5,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     width: 0,
     height: 0,
     borderLeftWidth: 6,
-    borderLeftColor: "#990000",
+    borderLeftColor: "#912338",
     borderTopWidth: 6,
     borderTopColor: "transparent",
     borderBottomWidth: 6,

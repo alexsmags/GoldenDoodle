@@ -14,7 +14,7 @@ export default StyleSheet.create({
         paddingHorizontal: 28,
         borderRadius: 25,
         borderWidth: 2,
-        borderColor: "#990000",
+        borderColor: "#912338",
         shadowColor: "#000",
         shadowOffset: { width: 2, height: 4 }, // 🔹 Make shadows more visible
         shadowOpacity: 0.3, // 🔹 Slightly increase shadow depth
@@ -24,7 +24,7 @@ export default StyleSheet.create({
     buttonText: {
         fontSize: 16,
         fontWeight: "600",
-        color: "#990000",
+        color: "#912338",
     },
     // 🔹 Fix for the faint text under "Optimize Route"
     helperText: {

@@ -4,10 +4,10 @@ export default StyleSheet.create({
   background: {
     position: "absolute",
     width: "100%",
-    height: 250,
+    height: 310,
     resizeMode: "cover",
   },
-  overlay: { // 🔴 Make sure this is included
+  overlay: {
     position: "absolute",
     width: "100%",
     height: "100%",
@@ -22,7 +22,7 @@ export default StyleSheet.create({
   },
   menuButton: {
     position: "absolute",
-    top: 40,
+    top: 63,
     left: 20,
   },
   welcomeText: {
@@ -31,20 +31,27 @@ export default StyleSheet.create({
     color: "#fff",
     marginTop: 50,
   },
+  studySpotText: { 
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#fff",
+    marginTop: 10,
+    textAlign: "center",
+  },
   timerText: {
     fontSize: 30,
     fontWeight: "400",
     color: "#fff",
     marginTop: 10,
   },
-routeButton: {
-  backgroundColor: "#990000",
-  paddingVertical: 12,
-  paddingHorizontal: 24,
-  borderRadius: 12,
-  marginTop: 20,  // ⬅️ Increase this value slightly (e.g., 25)
-  marginBottom: 15, // ⬅️ Add some bottom spacing
-},
+  routeButton: {
+    backgroundColor: "#912338",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    marginTop: 25,  // ⬆️ Increased value slightly
+    marginBottom: 15,
+  },
   routeButtonText: {
     color: "#fff",
     fontSize: 16,

@@ -1,49 +1,62 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
+import CampusMapping from "./components/CampusMap/CampusMap";
 import { useRouter } from "expo-router";
 
-export default function CampusMap() {
+export default function CampusMapScreen() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Campus Map</Text>
-      <Text style={styles.infoText}>This is where the campus map will be displayed.</Text>
-      
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
+      {/* Title & Back Button Overlay */}
+      <SafeAreaView style={styles.header}>
+        {/* Back Button */}
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <FontAwesome5 name="arrow-left" size={30} color="#fff" />
+        </TouchableOpacity>
+
+        {/* Placeholder View for Symmetry */}
+        <View style={{ width: 40 }} />
+      </SafeAreaView>
+
+      {/* Map should take full remaining space */}
+      <View style={styles.mapContainer}>
+        <CampusMapping />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1, 
     backgroundColor: "#fff",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#990000",
-    marginBottom: 10,
-  },
-  infoText: {
-    fontSize: 16,
-    color: "#333",
-    textAlign: "center",
+  header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+    backgroundColor: "#912338", 
+    paddingVertical: 12,
+    borderBottomWidth: 2,
+    borderBottomColor: "#731b2b",
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between", 
   },
   backButton: {
-    marginTop: 30,
-    padding: 10,
-    backgroundColor: "#990000",
-    borderRadius: 5,
+    paddingHorizontal: 10, 
+    paddingBottom: 5
   },
-  backButtonText: {
-    color: "white",
-    fontSize: 16,
+  titleContainer: {
+    flex: 1, 
+    alignItems: "center",
+  },
+  mapContainer: {
+    flex: 1, 
   },
 });
