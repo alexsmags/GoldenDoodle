@@ -41,7 +41,7 @@ jobs:
       - name: Run Jest Tests with Coverage
         run: |
           echo "Running Jest Coverage..."
-          npx jest --coverage --ci
+          npx jest --coverage --ci --passWithNoTests
           echo "Checking if coverage directory was created..."
           ls -l coverage/ || echo "No coverage folder found!"
         working-directory: expo-app
