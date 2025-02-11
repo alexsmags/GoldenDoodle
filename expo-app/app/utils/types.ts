@@ -1,3 +1,5 @@
+export type Campus = "SGW" | "Loyola";
+
 export type Coordinates = {
   latitude: number;
   longitude: number;
@@ -10,4 +12,12 @@ export type Building = {
   fillColor: string;
   strokeColor: string;
   description?: string;
+};
+
+export type CustomMarker = {
+  id: number;
+  title: string;
+  description: string;
+  coordinate: Coordinates;
+  campus?: Campus;
 };

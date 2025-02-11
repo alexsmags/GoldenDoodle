@@ -11,13 +11,19 @@ import {
 import CustomMarker from "./CustomMarker";
 import { SGWBuildings, LoyolaBuildings } from "./data/buildingData";
 import { getDirections } from "../../utils/directions";
-import { initialRegion, SGWMarkers, LoyolaMarkers } from "./data/customMarkerData";
+import {
+  initialRegion,
+  SGWMarkers,
+  LoyolaMarkers,
+} from "./data/customMarkerData";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import NavTab from "./NavTab";
 import * as Location from "expo-location";
 import { Building, Coordinates } from "../../utils/types";
 import ModalComponent from "./modals/BuildingInfoModal";
 import { getFillColorWithOpacity } from "../../utils/helperFunctions";
+import { eatingOnCampusData } from "./data/eatingOnCampusData";
+
 
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
@@ -29,6 +35,7 @@ const CampusMap = () => {
     null
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [viewEatingOnCampus, setViewEatingOnCampus] = useState<boolean>(false);
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
   const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
@@ -186,6 +193,22 @@ const CampusMap = () => {
             ))}
           </>
         )}
+
+        {/* Render Eating on Campus Markers */}
+        {viewEatingOnCampus &&
+          eatingOnCampusData
+            .filter((marker) => marker.campus === campus)
+            .map((marker) => (
+              <CustomMarker
+                key={marker.id}
+                coordinate={marker.coordinate}
+                title={marker.title}
+                description={marker.description}
+                isFoodLocation={true} // ✅ Mark as a food location
+                onPress={() => handleMarkerPress(marker.coordinate)}
+              />
+            ))}
+
         {/* Render Polyline for Route */}
         {routeCoordinates.length > 0 && (
           <Polyline
@@ -233,7 +256,7 @@ const CampusMap = () => {
         selectedBuilding={selectedBuilding}
         onNavigatePress={fetchRoute}
         onTravelPress={() => Alert.alert("Travel pressed")}
-        onEatPress={() => Alert.alert("Eat on Campus pressed")}
+        onEatPress={() => setViewEatingOnCampus((prevValue) => !prevValue)}
         onNextClassPress={() => Alert.alert("Next Class pressed")}
         onMoreOptionsPress={() => Alert.alert("More Options pressed")}
         onInfoPress={() => setIsModalVisible(true)}

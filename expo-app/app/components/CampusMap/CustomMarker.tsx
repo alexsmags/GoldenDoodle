@@ -1,8 +1,8 @@
 import React from "react";
 import { Marker, Callout } from "react-native-maps";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"; // Import icon library
 
-// Define the prop types
 type CustomMarkerProps = {
   coordinate: {
     latitude: number;
@@ -10,37 +10,43 @@ type CustomMarkerProps = {
   };
   title?: string;
   description?: string;
-  onPress?: () => void; // Add onPress prop
+  isFoodLocation?: boolean; // ✅ Add a prop to differentiate food locations
+  onPress?: () => void;
 };
 
 const CustomMarker: React.FC<CustomMarkerProps> = ({
   coordinate,
-  title = "Unknown Title", // Default title if not provided
-  description = "No description available", // Default description if not provided
-  onPress, // Destructure onPress prop
+  title = "Unknown Location",
+  description = "No description available",
+  isFoodLocation = false, // Default is false
+  onPress,
 }) => (
   <Marker coordinate={coordinate} onPress={onPress}>
-    <View style={styles.marker}>
-      <Text style={styles.markerText}>{title[0] || "?"}</Text>
+    <View style={[styles.marker, isFoodLocation && styles.foodMarker]}>
+      {isFoodLocation ? (
+        <MaterialIcons name="restaurant" size={20} color="white" /> // ✅ Restaurant icon for food places
+      ) : (
+        <Text style={styles.markerText}>{title[0] || "?"}</Text> // Default marker
+      )}
     </View>
     <Callout>
       <View style={styles.callout}>
-        <Text style={styles.calloutTitle}>{title}</Text>
+        <Text style={styles.calloutTitle}>
+          {title} {isFoodLocation ? "🍽" : ""}
+        </Text>
         <Text>{description}</Text>
-        {/* Add a button to navigate to this location */}
+        {/* Navigate Button */}
         <TouchableOpacity
           style={styles.navigateButton}
           onPress={() => {
             if (onPress) {
-              onPress(); // Trigger the onPress handler
+              onPress();
             } else {
               Alert.alert("Navigation", "Navigate to this location");
             }
           }}
         >
-          <Text style={styles.navigateButtonText}>
-            Navigate to this location
-          </Text>
+          <Text style={styles.navigateButtonText}>Navigate Here</Text>
         </TouchableOpacity>
       </View>
     </Callout>
@@ -50,17 +56,22 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({
 const styles = StyleSheet.create({
   marker: {
     backgroundColor: "blue",
-    padding: 5,
+    padding: 8,
     borderRadius: 20,
     borderColor: "white",
     borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  foodMarker: {
+    backgroundColor: "red", // ✅ Change marker color for food locations
   },
   markerText: {
     color: "white",
     fontWeight: "bold",
   },
   callout: {
-    width: 150,
+    width: 160,
     padding: 5,
   },
   calloutTitle: {
