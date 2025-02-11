@@ -1,4 +1,4 @@
-import { Building } from '../utils/types';
+import { Building } from '../../../utils/types';
 
 export const SGWBuildings : Building[] = [
   {

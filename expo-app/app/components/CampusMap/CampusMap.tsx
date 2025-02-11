@@ -9,15 +9,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import CustomMarker from "./CustomMarker";
-import { SGWBuildings, LoyolaBuildings } from "../data/buildingData";
-import { getDirections } from "../utils/directions";
-import { initialRegion, SGWMarkers, LoyolaMarkers } from "./customMarkerData";
+import { SGWBuildings, LoyolaBuildings } from "./data/buildingData";
+import { getDirections } from "../../utils/directions";
+import { initialRegion, SGWMarkers, LoyolaMarkers } from "./data/customMarkerData";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import NavTab from "./NavTab";
 import * as Location from "expo-location";
-import { Building, Coordinates } from "../utils/types";
+import { Building, Coordinates } from "../../utils/types";
 import ModalComponent from "./modals/BuildingInfoModal";
-import { getFillColorWithOpacity } from "../utils/helperFunctions";
+import { getFillColorWithOpacity } from "../../utils/helperFunctions";
 
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");

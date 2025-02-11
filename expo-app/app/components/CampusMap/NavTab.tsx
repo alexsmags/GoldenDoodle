@@ -1,7 +1,7 @@
 import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { Building } from "../utils/types";
+import { Building } from "../../utils/types";
 
 type NavTabProps = {
   campus: "SGW" | "Loyola";
