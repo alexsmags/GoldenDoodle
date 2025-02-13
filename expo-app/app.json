@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.goldendoodle.expoapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -37,11 +38,14 @@
     "experiments": {
       "typedRoutes": true
     },
-
     "extra": {
-      "googleMapsApiKey": "AIzaSyBYvb6Sg2jIbSgu_ckcLfsUekS2-pS5mc8"
+      "googleMapsApiKey": "AIzaSyBYvb6Sg2jIbSgu_ckcLfsUekS2-pS5mc8",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "40478a29-d711-4c72-9d85-531f27dd3645"
+      }
     }
-    
   }
-
 }
