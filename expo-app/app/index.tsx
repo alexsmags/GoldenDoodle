@@ -18,7 +18,7 @@ export default function LoginScreen() {
   };
 
   const handleGuestAccess = () => {
-    router.push("/screens/Home/HomePageScreen");
+    router.replace("/screens/Home/HomePageScreen");
   };
 
   const animatedX1 = useRef(new Animated.Value(0)).current;
