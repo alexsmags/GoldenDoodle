@@ -79,7 +79,7 @@ const HamburgerWidget: React.FC<HamburgerWidgetProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 100,
+    top: 55,
     right: 5,
     alignItems: "flex-end", // Ensures alignment to the right
     zIndex: 10,

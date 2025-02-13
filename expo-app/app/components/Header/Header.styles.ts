@@ -23,7 +23,7 @@ export default StyleSheet.create({
   menuButton: {
     position: "absolute",
     top: 63,
-    left: 20,
+    right: 20,
   },
   welcomeText: {
     fontSize: 20,

@@ -16,7 +16,7 @@ import {
   SGWMarkers,
   LoyolaMarkers,
 } from "./data/customMarkerData";
-import NavTab from "./NavTab";
+import NavTab from "./CampusMapNavTab";
 import * as Location from "expo-location";
 import { Building, Coordinates } from "../../utils/types";
 import ModalComponent from "./modals/BuildingInfoModal";

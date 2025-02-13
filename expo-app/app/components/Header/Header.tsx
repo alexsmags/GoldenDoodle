@@ -9,7 +9,7 @@ export default function Header(): JSX.Element {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/header-background.jpg")}
+      source={require("../../../assets/images/header-background.jpg")}
       style={styles.background}
     >
       {/* Dark Overlay for Text Readability */}

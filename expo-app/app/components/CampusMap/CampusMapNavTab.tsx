@@ -39,7 +39,7 @@ const NavTab: React.FC<NavTabProps> = ({
     : [
         { label: "Navigate", icon: "compass", action: onNavigatePress },
         {
-          label: campus === "SGW" ? "Loyola" : "SGW",
+          label: campus === "SGW" ? "SGW" : "Loyola",
           icon: "location-arrow",
           action: onTravelPress,
         },
@@ -71,30 +71,30 @@ const NavTab: React.FC<NavTabProps> = ({
 
 const styles = StyleSheet.create({
   navContainer: {
+    position: "relative",
     flexDirection: "row",
-    justifyContent: "space-between", 
+    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#912338",
+    backgroundColor: "rgba(145, 35, 56, 1)",
     paddingVertical: 16,
     borderTopWidth: 2,
     borderTopColor: "#731b2b",
-    position: "absolute",
     bottom: 0,
     width: "100%",
     paddingHorizontal: 10,
   },
   navItem: {
-    flex: 1, 
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8,
-    maxWidth: 80, 
+    maxWidth: 80,
   },
   navText: {
-    fontSize: 16, 
+    fontSize: 16,
     color: "#ddd",
-    marginTop: 3, 
-    flexWrap: "nowrap", 
+    marginTop: 3,
+    flexWrap: "nowrap",
     textAlign: "center",
   },
   activeText: {

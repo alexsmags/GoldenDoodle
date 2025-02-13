@@ -27,7 +27,7 @@ export default function HomeMenuScreen() {
       <TouchableOpacity 
         style={styles.menuItem} 
         activeOpacity={0.8} 
-        onPress={() => router.push("/screens/Home/CampusMapScreen")}
+        onPress={() => router.push("/screens/Home/ShuttleScheduleScreen")}
       >
         <Text style={styles.menuText}>🚌 Shuttle Schedule</Text>
       </TouchableOpacity>
