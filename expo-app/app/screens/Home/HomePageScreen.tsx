@@ -1,11 +1,11 @@
 import { View, StyleSheet } from "react-native";
-import Header from "../../../components/Header/Header";
-import ButtonSection from "../../../components/ButtonSection/ButtonSection";
-import SearchBar from "../../../components/SearchBar/SearchBar"; 
-import QuickShortcuts from "../../../components/QuickShortcuts/QuickShortcuts";
-import HottestSpots from "../../../components/HottestSpots/HottestSpots";
-import ShuttleSchedule from "../../../components/ShuttleSchedule/ShuttleSchedule"; 
-import BottomNavigation from "../../../components/BottomNavigation/BottomNavigation";
+import Header from "../../components/Header/Header";
+import ButtonSection from "../../components/ButtonSection/ButtonSection";
+import SearchBar from "../../components/SearchBar/SearchBar"; 
+import QuickShortcuts from "../../components/QuickShortcuts/QuickShortcuts";
+import HottestSpots from "../../components/HottestSpots/HottestSpots";
+import ShuttleSchedule from "../../components/ShuttleSchedule/ShuttleSchedule"; 
+import BottomNavigation from "../../components/BottomNavigation/BottomNavigation";
 
 export default function HomePageScreen() {
   return (
