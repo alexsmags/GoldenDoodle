@@ -39,7 +39,7 @@ const NavTab: React.FC<NavTabProps> = ({
     : [
         { label: "Navigate", icon: "compass", action: onNavigatePress },
         {
-          label: campus === "SGW" ? "Loyola" : "SGW",
+          label: campus === "SGW" ? "SGW" : "Loyola",
           icon: "location-arrow",
           action: onTravelPress,
         },
