@@ -61,9 +61,11 @@ jobs:
           profile: Nexus 6
           script: echo "Android Emulator is Ready"
 
-      - name: Start Expo Server
-        run: |
-          npm install
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start Expo Server 
+        run: 
           npx expo start -a
 
       - name: Wait for Expo to Start
