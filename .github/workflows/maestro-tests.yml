@@ -60,7 +60,7 @@ jobs:
       - name: Set up Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 29
           arch: x86_64
           profile: Nexus 6
           target: google_apis
