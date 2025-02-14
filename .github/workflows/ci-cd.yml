@@ -5,23 +5,17 @@ on:
     branches:
       - main
       - develop
-      - feature/*
-      - bugfix/*
   pull_request:
     branches:
       - main
       - develop
-      - feature/*
-      - bugfix/*
 
 jobs:
-  test:
+  setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -29,21 +23,25 @@ jobs:
           node-version: '20.x'
           cache: 'npm'
           cache-dependency-path: expo-app/package-lock.json
-
+          
       - name: Install Expo CLI
         run: npm install expo-cli
         working-directory: expo-app
-
-      - name: Install dependencies
+        
+      - name: Install Dependencies
         run: npm install
         working-directory: expo-app
 
+  jest-tests:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
       - name: Run Jest Tests with Coverage
         run: |
-          echo "Running Jest Coverage..."
           npx jest --coverage --ci --passWithNoTests
-          echo "Checking if coverage directory was created..."
-          ls -l coverage/ || echo "No coverage folder found!"
         working-directory: expo-app
 
       - name: Upload Coverage Report to Codecov
@@ -54,34 +52,67 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
-  sonar:
-    needs: test 
+  maestro-tests:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
         with:
-          node-version: '20.x'
-          cache: 'npm'
-          cache-dependency-path: expo-app/package-lock.json
+          api-level: 30
+          arch: x86_64
+          profile: Nexus 6
+          target: google_apis
+          disable-animations: true
+          script: adb devices 
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+      
+      - name: Run Maestro Tests
+        run: maestro test maestro-tests/index-test.yaml
+
+      - name: Upload Maestro Test Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-test-reports
+          path: maestro-tests/reports/
+
+  sonarqube:
+    needs: [jest-tests, maestro-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: "https://sonarcloud.io" 
+          SONAR_HOST_URL: "https://sonarcloud.io"
         with:
           args: >
-            -Dsonar.organization=goldendoodle-team
-            -Dsonar.projectKey=alexsmags_GoldenDoodle
+            -Dsonar.organization=your-org
+            -Dsonar.projectKey=your-project
             -Dsonar.sources=expo-app/app
             -Dsonar.test.inclusions=expo-app/__tests__/**/*.test.{js,ts,tsx}
             -Dsonar.exclusions=expo-app/node_modules/**,expo-app/coverage/**,expo-app/__tests__/**
             -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
-            
-# Add -Dsonar.tests=expo-app/__tests__, when tests exist.
+
+  deploy:
+    needs: [sonarqube]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying application..."
+          # Add deployment steps here
