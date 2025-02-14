@@ -41,10 +41,14 @@ jobs:
       - name: Verify Installation
         run: maestro --version
 
-      - name: Update and Install Android SDK
+      - name: Install Android SDK
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y lib32stdc++6 lib32z1
+          wget https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O cmdline-tools.zip
+          unzip cmdline-tools.zip -d $HOME/cmdline-tools
+          export ANDROID_SDK_ROOT=$HOME/cmdline-tools
+          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin
           yes | sdkmanager --licenses >/dev/null
           sdkmanager --install 'build-tools;35.0.0' platform-tools 'platforms;android-30' >/dev/null
 
