@@ -63,12 +63,17 @@ jobs:
           api-level: 30
           arch: x86_64
           profile: Nexus 6
-          script: echo "Android Emulator is Ready"
+          target: google_apis
+          emulator-options: "-no-snapshot -no-audio -no-window"
+          disable-animations: true
+          script: adb devices
 
       - name: Install Dependencies
+        working-directory: expo-app
         run: |
-          cd expo-app
           npm install
+          expo doctor --fix-dependencies
+
 
       - name: Start Expo Server
         run: |
