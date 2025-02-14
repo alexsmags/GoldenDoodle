@@ -114,8 +114,29 @@ jobs:
       - name: Start Emulator
         run: |
           echo "Starting emulator..."
-          nohup $ANDROID_HOME/emulator/emulator -avd test_emulator -no-audio -no-window -no-snapshot -gpu swiftshader_indirect > /dev/null 2>&1 &
-          sleep 10
+          nohup $ANDROID_HOME/emulator/emulator -avd test_emulator -no-audio -no-window -gpu swiftshader_indirect -no-snapshot > /dev/null 2>&1 &
+
+          echo "Waiting for emulator to boot..."
+          boot_completed="0"
+          timeout=300  # 5-minute timeout
+          elapsed=0
+          
+          while [[ "$boot_completed" != "1" && $elapsed -lt $timeout ]]; do
+            sleep 10
+            boot_completed=$(adb shell getprop sys.boot_completed 2>/dev/null || echo "0")
+            echo "Boot status: $boot_completed ($elapsed sec elapsed)"
+            elapsed=$((elapsed + 10))
+          done
+          
+          if [[ "$boot_completed" != "1" ]]; then
+            echo "Emulator failed to boot in time!"
+            adb devices
+            adb logcat -d > emulator_logs.txt
+            exit 1
+          fi
+
+          echo "Emulator is fully booted!"
+
 
       - name: Check Emulator Boot Status
         run: |
