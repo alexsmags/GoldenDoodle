@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gderhy.expoapp"
     },
     "web": {
       "bundler": "metro",
@@ -37,11 +38,8 @@
     "experiments": {
       "typedRoutes": true
     },
-
     "extra": {
       "googleMapsApiKey": "AIzaSyBYvb6Sg2jIbSgu_ckcLfsUekS2-pS5mc8"
     }
-    
   }
-
 }
