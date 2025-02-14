@@ -9,7 +9,7 @@ on:
     branches:
       - main
       - develop
-  workflow_dispatch:  # Allow manual triggering from GitHub UI
+  workflow_dispatch:
 
 jobs:
   maestro-tests:
@@ -40,6 +40,13 @@ jobs:
 
       - name: Verify Installation
         run: maestro --version
+
+      - name: Update and Install Android SDK
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y lib32stdc++6 lib32z1
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager --install 'build-tools;35.0.0' platform-tools 'platforms;android-30' >/dev/null
 
       - name: Set up Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
