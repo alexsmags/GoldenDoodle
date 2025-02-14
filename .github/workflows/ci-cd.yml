@@ -65,59 +65,66 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
-  maestro-tests:
-      needs: setup
-      runs-on: macos-latest 
-      steps:
-        - name: Checkout Code
-          uses: actions/checkout@v4
-  
-        - name: Set up Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: '20.x'
-            cache: 'npm'
-            cache-dependency-path: expo-app/package-lock.json
-  
-        - name: Install Expo CLI
-          run: npm install -g expo-cli
-  
-        - name: Install Dependencies
-          run: npm install
-          working-directory: expo-app
-  
-        - name: Start Expo in the Background
-          run: |
-            npx expo start --android --no-interactive &
-            sleep 60 # Allow time for Metro Bundler to start
-  
-        - name: Install Android Emulator
-          run: |
-            echo "Installing AVD and dependencies..."
-            sudo $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-31;google_apis;x86_64"
-            sudo $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-            echo "Creating emulator..."
-            echo "no" | avdmanager create avd -n test -k "system-images;android-31;google_apis;x86_64" --device "pixel_4"
-  
-        - name: Start Android Emulator
-          run: |
-            echo "Starting emulator..."
-            nohup $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -no-snapshot > /dev/null 2>&1 &
-            sleep 120 # Allow time for emulator to fully boot
-  
-        - name: Install Maestro
-          run: curl -Ls "https://get.maestro.mobile.dev" | bash
-  
-        - name: Run Maestro Tests
-          run: maestro test ./maestro-tests
-  
-        - name: Upload Maestro Test Artifacts (if failures)
-          if: failure()
-          uses: actions/upload-artifact@v4
-          with:
-            name: maestro-test-results
-            path: ./maestro-tests/results
 
+  maestro-tests:
+    needs: setup
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: expo-app/package-lock.json
+
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: expo-app
+
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      - name: Install Required Android SDK Packages
+        run: |
+          echo "Installing Android SDK system images..."
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install \
+            "platforms;android-31" \
+            "build-tools;31.0.0" \
+            "platform-tools" \
+            "system-images;android-31;google_apis;x86_64"
+
+      - name: Create and Start Emulator
+        run: |
+          echo "Creating Android emulator..."
+          echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n test_emulator -k "system-images;android-31;google_apis;x86_64" --device "pixel_4"
+
+          echo "Starting emulator..."
+          nohup $ANDROID_HOME/emulator/emulator -avd test_emulator -no-audio -no-window -no-snapshot > /dev/null 2>&1 &
+          sleep 120 # Allow time for emulator to fully boot
+
+      - name: Verify Emulator is Running
+        run: adb devices
+
+      - name: Install Maestro
+        run: curl -Ls "https://get.maestro.mobile.dev" | bash
+
+      - name: Run Maestro Tests
+        run: maestro test ./maestro-tests
+
+      - name: Upload Maestro Test Artifacts (if failures)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-test-results
+          path: ./maestro-tests/results
+          
 
   sonarqube:
     needs: [jest-tests, maestro-tests]
