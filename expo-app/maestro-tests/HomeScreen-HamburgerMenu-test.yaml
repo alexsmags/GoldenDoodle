@@ -1,4 +1,4 @@
-appId: com.gderhy.expoapp
+appId: com.goldendoodle.expoapp
 ---
 - assertVisible: "📍 Campus Map"
 - assertVisible: "🚌 Shuttle Schedule"

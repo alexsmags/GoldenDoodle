@@ -16,7 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.gderhy.expoapp"
+      "package": "com.goldendoodle.expoapp", // This is the appId in maestro-testing
     },
     "web": {
       "bundler": "metro",
