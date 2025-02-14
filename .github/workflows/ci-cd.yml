@@ -72,7 +72,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
+  
       - name: Set up Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -81,21 +81,26 @@ jobs:
           profile: Nexus 6
           target: google_apis
           disable-animations: true
-          script: adb devices 
-
+          emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none"
+          script: adb wait-for-device shell input keyevent 82
+  
+      - name: Verify Emulator is Running
+        run: adb devices
+  
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-      
+  
       - name: Run Maestro Tests
         run: maestro test maestro-tests/index-test.yaml
-
+  
       - name: Upload Maestro Test Reports
         uses: actions/upload-artifact@v4
         with:
           name: maestro-test-reports
           path: maestro-tests/reports/
+
 
   sonarqube:
     needs: [jest-tests, maestro-tests]
