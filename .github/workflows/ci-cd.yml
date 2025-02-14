@@ -113,7 +113,7 @@ jobs:
   
         - name: Upload Maestro Test Artifacts (if failures)
           if: failure()
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
             name: maestro-test-results
             path: ./maestro-tests/results
