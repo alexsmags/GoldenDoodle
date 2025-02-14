@@ -67,39 +67,48 @@ jobs:
 
 
   maestro-tests:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-  
-      - name: Set up Android Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          arch: x86_64
-          profile: Nexus 6
-          target: google_apis
-          disable-animations: true
-          emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none"
-          script: adb wait-for-device shell input keyevent 82
-  
-      - name: Verify Emulator is Running
-        run: adb devices
-  
-      - name: Install Maestro
-        run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-  
-      - name: Run Maestro Tests
-        run: maestro test maestro-tests/index-test.yaml
-  
-      - name: Upload Maestro Test Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: maestro-test-reports
-          path: maestro-tests/reports/
+      needs: setup
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Code
+          uses: actions/checkout@v4
+    
+        - name: Set up Android Emulator
+          uses: reactivecircus/android-emulator-runner@v2
+          with:
+            api-level: 30
+            arch: x86_64
+            profile: Nexus 6
+            target: google_apis
+            disable-animations: false  # Prevent "Broken pipe (32)" error
+            emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -memory 4096"
+            script: |
+              adb wait-for-device shell input keyevent 82
+              adb shell settings put system screen_off_timeout 2147483647
+              adb shell settings put global window_animation_scale 0.0 || true
+              adb shell settings put global transition_animation_scale 0.0 || true
+              adb shell settings put global animator_duration_scale 0.0 || true
+    
+        - name: Verify Emulator is Running
+          run: adb devices
+    
+        - name: Install Maestro
+          run: |
+            curl -Ls "https://get.maestro.mobile.dev" | bash
+            echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+    
+        - name: Run Maestro Tests
+          run: maestro test maestro-tests/index-test.yaml
+    
+        - name: Upload Maestro Test Reports
+          uses: actions/upload-artifact@v4
+          with:
+            name: maestro-test-reports
+            path: maestro-tests/reports/
+    
+        - name: Cleanup Emulator
+          if: always()
+          run: adb emu kill || true
 
 
   sonarqube:
