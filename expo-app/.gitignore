@@ -44,8 +44,7 @@ android/
 app/hooks/googlePlatFormConfig.ts
 
 # Firebase API Keys
-<<<<<<< HEAD
 app/services/firebase/firebaseConfig.ts
-=======
-app/services/firebase/firebaseConfig.ts
->>>>>>> origin/main
+
+# Clover reports
+coverage/
