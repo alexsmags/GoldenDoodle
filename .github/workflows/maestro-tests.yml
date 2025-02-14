@@ -76,13 +76,19 @@ jobs:
           adb shell settings put global animator_duration_scale 0
           adb shell input keyevent 82
           sleep 40  
+          adb devices
 
       - name: Restart Emulator if Crashed
         run: |
-          adb kill-server || true
-          adb start-server
-          emulator -avd Nexus_6 -no-snapshot -no-audio -no-window -gpu swiftshader_indirect &
-          sleep 40  # Ensure enough time for a proper restart
+          emulator_running=$(adb shell getprop sys.boot_completed 2>&1)
+          if [[ "$emulator_running" != "1" ]]; then
+            echo "Emulator not running, restarting..."
+            adb kill-server || true
+            adb start-server
+            emulator -avd Nexus_6 -no-snapshot -no-snapshot-load -no-audio -no-window -gpu swiftshader_indirect &
+            sleep 40
+          fi
+          adb devices 
 
       - name: Verify Emulator is Running
         run: adb devices
