@@ -10,6 +10,7 @@ export default function SearchBar() {
         placeholder="Search for anything nearby"
         placeholderTextColor="#999"
         style={styles.searchInput}
+        testID="search-input"
       />
     </View>
   );
