@@ -19,11 +19,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up Java (Required for ADB)
-        uses: actions/setup-java@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          node-version: 18
+        
+      - name: Change Directory to expo-app
+        run: cd expo-app
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Verify Installation
+        run: maestro --version
 
       - name: Set up Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
@@ -33,22 +49,13 @@ jobs:
           profile: Nexus 6
           script: echo "Android Emulator is Ready"
 
-      - name: Install Maestro
-        run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-
-      - name: Verify Installation
-        run: maestro --version
-
       - name: Start Expo Server
         run: |
-          npm install -g expo-cli
           npm install
-          npx expo start --no-interactive &
+          npx expo start -a
 
       - name: Wait for Expo to Start
-        run: sleep 30  # Wait for Expo to fully boot
+        run: sleep 60  # Wait for Expo to fully boot
 
       - name: Run Maestro Tests
         run: maestro test maestro-tests/index-test.yaml
