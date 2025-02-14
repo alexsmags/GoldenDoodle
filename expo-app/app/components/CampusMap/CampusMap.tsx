@@ -19,7 +19,7 @@ import {
 import NavTab from "./CampusMapNavTab";
 import * as Location from "expo-location";
 import { Building, Coordinates } from "../../utils/types";
-import ModalComponent from "./modals/BuildingInfoModal";
+import BuildingInfoModal from "./modals/BuildingInfoModal";
 import { getFillColorWithOpacity } from "../../utils/helperFunctions";
 import { eatingOnCampusData } from "./data/eatingOnCampusData";
 import NextClassModal from "./modals/NextClassModal";
@@ -214,7 +214,7 @@ const CampusMap = () => {
       </MapView>
 
       {/* Modal for Building Info */}
-      <ModalComponent
+      <BuildingInfoModal
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         title={selectedBuilding?.name || "Building Information"}
