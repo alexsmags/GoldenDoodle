@@ -92,39 +92,58 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
           export PATH="$HOME/.maestro/bin:$PATH"
-          
-      - name: Verify Maestro Installation
-        run: maestro --version 
 
-      - name: Accept Android SDK Licenses
+      - name: Verify Maestro Installation
+        run: maestro --version
+
+      - name: Install and Accept Android SDK Licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-
-      - name: Install Required Android SDK Packages
-        run: |
-          echo "Installing Android SDK system images..."
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install \
             "platforms;android-31" \
             "build-tools;31.0.0" \
             "platform-tools" \
             "system-images;android-31;google_apis;x86_64"
 
-      - name: Create and Start Emulator
+      - name: Create Emulator
         run: |
           echo "Creating Android emulator..."
-          echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n test_emulator -k "system-images;android-31;google_apis;x86_64" --device "pixel_4"
+          $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n test_emulator \
+            -k "system-images;android-31;google_apis;x86_64" --device "pixel_4" || true
 
+      - name: Start Emulator
+        run: |
           echo "Starting emulator..."
-          nohup $ANDROID_HOME/emulator/emulator -avd test_emulator -no-audio -no-window -no-snapshot > /dev/null 2>&1 &
+          nohup $ANDROID_HOME/emulator/emulator -avd test_emulator -no-audio -no-window -no-snapshot -gpu swiftshader_indirect > /dev/null 2>&1 &
+          sleep 10
 
+      - name: Check Emulator Boot Status
+        run: |
+          echo "Checking emulator status..."
+          adb wait-for-device
+          adb shell getprop sys.boot_completed
+          adb devices
+
+      - name: Ensure Emulator is Fully Booted
+        run: |
           echo "Waiting for emulator to fully boot..."
           boot_completed="false"
-          while [ "$boot_completed" != "1" ]; do
+          timeout=300  # 5 minutes max wait time
+          elapsed=0
+          while [ "$boot_completed" != "1" ] && [ $elapsed -lt $timeout ]; do
             sleep 10
             boot_completed=$(adb shell getprop sys.boot_completed 2>/dev/null)
-            echo "Waiting for emulator to boot..."
+            echo "Waiting for emulator to boot... ($elapsed sec)"
+            elapsed=$((elapsed+10))
           done
-          echo "Emulator is fully booted!" 
+
+          if [ "$boot_completed" != "1" ]; then
+            echo "Emulator failed to boot!"
+            adb devices
+            exit 1
+          fi
+
+          echo "Emulator is fully booted!"
 
       - name: Verify Emulator is Running
         run: adb devices
@@ -132,7 +151,7 @@ jobs:
       - name: Start Expo in the Background
         run: |
           npx expo start --android --no-interactive &
-          sleep 60 # Allow time for Metro Bundler to start
+          sleep 60
 
       - name: Run Maestro Tests
         run: maestro test expo-app/maestro-tests
@@ -143,6 +162,7 @@ jobs:
         with:
           name: maestro-test-results
           path: expo-app/maestro-tests/results
+
           
 
   sonarqube:
