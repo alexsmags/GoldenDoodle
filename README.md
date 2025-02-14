@@ -134,7 +134,7 @@ GoldenDoodle is a complete Campus Guide application created as part of the SOEN-
 | Gabriel Derhy    | Full-Stack     | gabrielderhy@gmail.com  |
 | Jonathan Della Penta    | Front-End     | jonathandellapenta@gmail.com  |
 | Patrick Fuoco    | Front-End     | pfuoco01@gmail.com  |
-| Sadee Shadman    | Back-End     | N/A  |
+| Sadee Shadman    | Back-End     | sadeeshadman@gmail.com  |
 | Seth Hains   | N/A     | N/A  |
 | Steven Zrihen    | Back-End     | N/A  |
 
