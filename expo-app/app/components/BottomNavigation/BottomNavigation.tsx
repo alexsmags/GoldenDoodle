@@ -10,6 +10,7 @@ export default function BottomNavigation() {
       {TABS.map((tab) => (
         <TouchableOpacity
           key={tab.label}
+          testID={`tab-${tab.label}`}
           style={styles.tab}
           onPress={() => setActiveTab(tab.label)}
         >

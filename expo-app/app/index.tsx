@@ -6,7 +6,7 @@ import Svg, { Circle } from "react-native-svg";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-export default function LoginScreen() {
+export default function App() {
   const router = useRouter();
 
   const [request, response, promptAsync] = Google.useAuthRequest({

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-type ModalComponentProps = {
+type BuildingInfoModalProps = {
   visible: boolean;
   onClose: () => void;
   title: string;
@@ -19,7 +19,7 @@ type ModalComponentProps = {
   showCloseButton?: boolean;
 };
 
-const ModalComponent: React.FC<ModalComponentProps> = ({
+const BuildingInfoModal: React.FC<BuildingInfoModalProps> = ({
   visible,
   onClose,
   title,
@@ -35,7 +35,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
+      <TouchableWithoutFeedback onPress={onClose} testID="close-button">
         <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback>
             <View style={styles.modalContent}>
@@ -119,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalComponent;
+export default BuildingInfoModal;
