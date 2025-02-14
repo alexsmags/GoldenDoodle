@@ -72,7 +72,7 @@ jobs:
         working-directory: expo-app
         run: |
           npm install
-          npx expo-doctor --fix-dependencies
+          npx expo-doctor
 
 
       - name: Start Expo Server
