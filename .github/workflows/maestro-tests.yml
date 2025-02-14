@@ -60,7 +60,7 @@ jobs:
       - name: Set up Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 30
           arch: x86_64
           profile: Nexus 6
           target: google_apis
@@ -68,25 +68,6 @@ jobs:
           disable-animations: true
           script: adb devices 
 
-      - name: Ensure Emulator is Running
-        run: |
-          echo "Waiting for emulator to boot..."
-          adb wait-for-device
-          sleep 10
-          boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
-          while [[ "$boot_completed" != "1" ]]; do
-            echo "⏳ Waiting for emulator to fully boot..."
-            sleep 10
-            boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
-          done
-          echo "✅ Emulator is fully booted."
-          
-      - name: Unlock Emulator & Disable Animations
-        run: |
-          adb shell input keyevent 82  # Unlock screen
-          adb shell settings put global window_animation_scale 0
-          adb shell settings put global transition_animation_scale 0
-          adb shell settings put global animator_duration_scale 0
 
       - name: Install Dependencies
         working-directory: expo-app
@@ -103,8 +84,11 @@ jobs:
           npx expo start -a
 
       - name: Wait for Expo to Start
-        run: sleep 60  # Wait for Expo to fully boot
+        run: sleep 60  
 
+      - name: Install Expo Go on Emulator
+        run: adb install "$(npm root -g)/expo-cli/android/apk/ExpoGo.apk"
+        
       - name: Run Maestro Tests
         run: maestro test maestro-tests/index-test.yaml
 
