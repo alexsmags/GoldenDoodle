@@ -96,11 +96,6 @@ jobs:
       - name: Verify Maestro Installation
         run: maestro --version 
 
-      - name: Start Expo in the Background
-        run: |
-          npx expo start --android --no-interactive &
-          sleep 60 # Allow time for Metro Bundler to start
-
       - name: Accept Android SDK Licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
@@ -121,10 +116,23 @@ jobs:
 
           echo "Starting emulator..."
           nohup $ANDROID_HOME/emulator/emulator -avd test_emulator -no-audio -no-window -no-snapshot > /dev/null 2>&1 &
-          sleep 120 
+
+          echo "Waiting for emulator to fully boot..."
+          boot_completed="false"
+          while [ "$boot_completed" != "1" ]; do
+            sleep 10
+            boot_completed=$(adb shell getprop sys.boot_completed 2>/dev/null)
+            echo "Waiting for emulator to boot..."
+          done
+          echo "Emulator is fully booted!" 
 
       - name: Verify Emulator is Running
         run: adb devices
+
+      - name: Start Expo in the Background
+        run: |
+          npx expo start --android --no-interactive &
+          sleep 60 # Allow time for Metro Bundler to start
 
       - name: Run Maestro Tests
         run: maestro test expo-app/maestro-tests
