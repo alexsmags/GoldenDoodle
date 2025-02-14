@@ -47,8 +47,9 @@ jobs:
           sudo apt-get install -y lib32stdc++6 lib32z1
           wget https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O cmdline-tools.zip
           unzip cmdline-tools.zip -d $HOME/cmdline-tools
-          export ANDROID_SDK_ROOT=$HOME/cmdline-tools
-          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin
+          mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/tools
+          mv $HOME/cmdline-tools/cmdline-tools/* $ANDROID_SDK_ROOT/cmdline-tools/tools/
+          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/tools/bin
           yes | sdkmanager --licenses >/dev/null
           sdkmanager --install 'build-tools;35.0.0' platform-tools 'platforms;android-30' >/dev/null
 
