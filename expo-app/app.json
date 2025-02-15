@@ -9,14 +9,17 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIentifier": "com.goldendoodle.expoapp",
+      "ios":"./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.goldendoodle.expoapp", // This is the appId in maestro-testing
+      "package": "com.goldendoodle.expoapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -33,13 +36,32 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      "@react-native-google-signin/google-signin",
+      [
+        "@react-native-firebase/app",
+        [
+          "expo-build-properties",
+          {
+            "ios": {
+              "useFrameworks": "static"
+            }
+          }
+        ]
       ]
-    ],
+    ]
+    ,
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
-      "googleMapsApiKey": "AIzaSyBYvb6Sg2jIbSgu_ckcLfsUekS2-pS5mc8"
+      "googleMapsApiKey": "AIzaSyBYvb6Sg2jIbSgu_ckcLfsUekS2-pS5mc8",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "fd5074ae-9387-4f62-9753-f8274ba822e0"
+      }
     }
   }
 }

@@ -2,40 +2,80 @@ import React from "react";
 import { View, Text, ImageBackground, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
+import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import styles from "./Header.styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Header(): JSX.Element {
+interface HeaderProps {
+  userName: string;
+  isGuest: boolean;
+}
+
+export default function Header({ userName, isGuest }: HeaderProps): JSX.Element {
   const router = useRouter();
 
+  const handleLogout = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      await auth().signOut();
+      
+      await AsyncStorage.removeItem("userName");
+  
+      router.push("/");
+    } catch (error) {
+      console.error("Logout Error:", error);
+    }
+  };
+
   return (
+    
     <ImageBackground
       source={require("../../../assets/images/header-background.jpg")}
       style={styles.background}
     >
-      {/* Dark Overlay for Text Readability */}
       <View style={styles.overlay} />
 
-      <View style={styles.container}>
-        {/* Hamburger Menu */}
-        <TouchableOpacity style={styles.menuButton} onPress={() => router.push("/screens/Home/HomeMenuScreen")}>
-          <Feather name="menu" size={28} color="white" />
+      {/* Header Row for Icons */}
+      <View style={styles.headerTopRow}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={isGuest ? () => router.push("/") : handleLogout}
+        >
+          {isGuest ? (
+            <Feather name="arrow-left" size={22} color="white" />
+          ) : (
+            <Feather name="log-out" size={22} color="white" />
+          )}
         </TouchableOpacity>
 
-        {/* Welcome Message */}
-        <Text style={styles.welcomeText}>Welcome Back, Steven</Text>
+        {/* Hamburger Menu */}
+        <TouchableOpacity
+          style={styles.menuButton}
+          onPress={() => router.push("/screens/Home/HomeMenuScreen")}
+        >
+          <Feather name="menu" size={26} color="white" />
+        </TouchableOpacity>
+      </View>
 
-        {/* Timer */}
-        <Text style={styles.timerText}>You have 13 minutes until your next class</Text>
+      {/* Text & Buttons */}
+      <View style={styles.headerContent}>
+        <Text style={styles.welcomeText}>
+          {userName ? `Welcome Back, ${userName}` : "Welcome!"}
+        </Text>
+        <Text style={styles.timerText}>
+          You have 13 minutes until your next class
+        </Text>
 
         {/* Optimize Route Button */}
         <TouchableOpacity style={styles.routeButton}>
           <Text style={styles.routeButtonText}>Optimize Route</Text>
         </TouchableOpacity>
-        
-        {/* Move "Find your next study spot or coffee stop." Here */}
-          <Text style={styles.studySpotText}>
-            Find your next study spot or coffee stop.
-          </Text>
+
+        <Text style={styles.studySpotText}>
+          Find your next study spot or coffee stop.
+        </Text>
       </View>
     </ImageBackground>
   );

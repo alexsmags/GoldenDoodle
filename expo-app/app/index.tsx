@@ -1,131 +1,107 @@
-import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Easing } from "react-native";
-import * as Google from "expo-auth-session/providers/google";
+import React, { useEffect, useRef, useState } from "react";
+import { 
+  View, Text, StyleSheet, TouchableOpacity, Image, Animated, Easing
+} from "react-native";
 import { useRouter } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-export default function App() {
+export default function SignInScreen() {
   const router = useRouter();
-
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-  });
-
-  const handleGoogleSignIn = () => {
-    promptAsync();
-  };
-
-  const handleGuestAccess = () => {
-    router.replace("/screens/Home/HomePageScreen");
-  };
-
-  const animatedX1 = useRef(new Animated.Value(0)).current;
-  const animatedY1 = useRef(new Animated.Value(0)).current;
-
-  const animatedX2 = useRef(new Animated.Value(0)).current;
-  const animatedY2 = useRef(new Animated.Value(0)).current;
-
-  const animatedX3 = useRef(new Animated.Value(0)).current;
-  const animatedY3 = useRef(new Animated.Value(0)).current;
-
-  const animatedX4 = useRef(new Animated.Value(0)).current;
-  const animatedY4 = useRef(new Animated.Value(0)).current;
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  
+  const animation1 = useRef(new Animated.Value(0)).current;
+  const animation2 = useRef(new Animated.Value(0)).current;
+  const animation3 = useRef(new Animated.Value(0)).current;
+  const animation4 = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const createSmoothAnimation = (animatedX: Animated.Value, animatedY: Animated.Value, xRange: number, yRange: number, duration: number) => {
-      Animated.loop(
+    GoogleSignin.configure({
+      webClientId: "259837654437-eo18pu30v9grv1i3dog8ba5i64ipj1q7.apps.googleusercontent.com"
+    });
+  }, []);
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged((user) => {
+      setUser(user);
+      if (user) {
+        router.replace("/screens/Home/HomePageScreen");
+      }
+      setInitializing(false);
+    });
+    return subscriber;
+  }, []);
+
+  useEffect(() => {
+    const animateCircle = (animation: Animated.Value, duration: number) => {
+      return Animated.loop(
         Animated.sequence([
-          Animated.parallel([
-            Animated.timing(animatedX, {
-              toValue: xRange,
-              duration: duration,
-              easing: Easing.inOut(Easing.sin),
-              useNativeDriver: false,
-            }),
-            Animated.timing(animatedY, {
-              toValue: yRange,
-              duration: duration,
-              easing: Easing.inOut(Easing.sin),
-              useNativeDriver: false,
-            }),
-          ]),
-          Animated.parallel([
-            Animated.timing(animatedX, {
-              toValue: 0, 
-              duration: duration,
-              easing: Easing.inOut(Easing.sin),
-              useNativeDriver: false,
-            }),
-            Animated.timing(animatedY, {
-              toValue: 0,
-              duration: duration,
-              easing: Easing.inOut(Easing.sin),
-              useNativeDriver: false,
-            }),
-          ]),
+          Animated.timing(animation, { toValue: 20, duration, easing: Easing.linear, useNativeDriver: true }),
+          Animated.timing(animation, { toValue: 0, duration, easing: Easing.linear, useNativeDriver: true })
         ])
       ).start();
     };
 
-    createSmoothAnimation(animatedX1, animatedY1, 40, 30, 5000);
-    createSmoothAnimation(animatedX2, animatedY2, 50, 20, 4500);
-    createSmoothAnimation(animatedX3, animatedY3, 35, 40, 6000);
-    createSmoothAnimation(animatedX4, animatedY4, 45, 25, 5500);
+    animateCircle(animation1, 3000);
+    animateCircle(animation2, 4000);
+    animateCircle(animation3, 5000);
+    animateCircle(animation4, 6000);
   }, []);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      const signInResponse = await GoogleSignin.signIn();
+      const tokens = await GoogleSignin.getTokens();
+      const idToken = tokens.idToken ?? null;
+
+      if (!idToken) {
+        console.error("Google Sign-In failed: No ID Token received.");
+        return;
+      }
+
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const userCredential = await auth().signInWithCredential(googleCredential);
+      const userName = userCredential.user.displayName || "Guest";
+
+      await AsyncStorage.setItem("userName", userName);
+      router.replace("/screens/Home/HomePageScreen");
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
+    }
+  };
+
+  if (initializing) return <View style={{ flex: 1, backgroundColor: "#FFF" }} />;
 
   return (
     <View style={styles.container}>
-      {/* Animated SVG Background */}
       <Svg style={StyleSheet.absoluteFillObject}>
-        <AnimatedCircle
-          cx={animatedX1.interpolate({ inputRange: [-40, 40], outputRange: [0, 40] })}
-          cy={animatedY1.interpolate({ inputRange: [-30, 30], outputRange: [30, 60] })}
-          r="100"
-          fill="#731b2b"
-          opacity="0.6"
-        />
-        <AnimatedCircle
-          cx={animatedX2.interpolate({ inputRange: [-50, 50], outputRange: [400, 450] })}
-          cy={animatedY2.interpolate({ inputRange: [-20, 20], outputRange: [275, 295] })}
-          r="100"
-          fill="#731b2b"
-          opacity="0.5"
-        />
-        <AnimatedCircle
-          cx={animatedX3.interpolate({ inputRange: [-35, 35], outputRange: [80, 115] })}
-          cy={animatedY3.interpolate({ inputRange: [-40, 40], outputRange: [500, 540] })}
-          r="100"
-          fill="#731b2b"
-          opacity="0.4"
-        />
-        <AnimatedCircle
-          cx={animatedX4.interpolate({ inputRange: [-45, 45], outputRange: [330, 375] })}
-          cy={animatedY4.interpolate({ inputRange: [-25, 25], outputRange: [700, 725] })}
-          r="100"
-          fill="#731b2b"
-          opacity="0.6"
-        />
+        <AnimatedCircle cx={150} cy={150} r="130" fill="#731b2b" opacity="0.6" transform={[{ translateY: animation1 }]} />
+        <AnimatedCircle cx={320} cy={375} r="100" fill="#912338" opacity="0.5" transform={[{ translateY: animation2 }]} />
+        <AnimatedCircle cx={120} cy={550} r="110" fill="#b52e45" opacity="0.4" transform={[{ translateY: animation3 }]} />
+        <AnimatedCircle cx={320} cy={750} r="130" fill="#d0465b" opacity="0.3" transform={[{ translateY: animation4 }]} />
       </Svg>
 
-      {/* App Logo */}
       <Image source={require("../../expo-app/assets/images/concordia-logo.png")} style={styles.logo} />
 
-      {/* Welcome Text */}
       <View style={styles.textContainer}>
         <Text style={styles.title}>Welcome to Concordia Navigator</Text>
         <Text style={styles.subtitle}>Sign in or continue as a guest</Text>
       </View>
 
-      {/* Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn} activeOpacity={0.8}>
           <Image source={require("../../expo-app/assets/images/google-logo.png")} style={styles.googleImage} />
           <Text style={styles.googleButtonText}>Sign in with Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.guestButton} onPress={handleGuestAccess} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.guestButton} onPress={() => router.replace("/screens/Home/HomePageScreen")} activeOpacity={0.8}>
           <Text style={styles.buttonText}>Continue as Guest</Text>
         </TouchableOpacity>
       </View>
@@ -138,7 +114,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9F9F9",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   logo: {
     width: 400,
@@ -208,7 +184,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 5,
-    marginBottom: 20
+    marginBottom: 20,
   },
   buttonText: {
     color: "#FFF",

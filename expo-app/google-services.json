@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "259837654437",
+    "project_id": "soen-390-golden-doodle",
+    "storage_bucket": "soen-390-golden-doodle.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259837654437:android:1e52a4eaab154c0504e44c",
+        "android_client_info": {
+          "package_name": "com.goldendoodle.expoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259837654437-8q6a2lcl2ag1umjngs2qc99ss569i9qt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.goldendoodle.expoapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "259837654437-eo18pu30v9grv1i3dog8ba5i64ipj1q7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS0EUqqlPrO3lgniw92g5mOMaa8bKwriA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259837654437-eo18pu30v9grv1i3dog8ba5i64ipj1q7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "259837654437-j8g7mrar7qjjigb7q9th5e1ephaje3u5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.goldendoodle.expoapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
