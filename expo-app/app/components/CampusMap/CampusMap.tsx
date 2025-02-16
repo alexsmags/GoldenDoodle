@@ -24,6 +24,7 @@ import { getFillColorWithOpacity } from "../../utils/helperFunctions";
 import { eatingOnCampusData } from "./data/eatingOnCampusData";
 import NextClassModal from "./modals/NextClassModal";
 import HamburgerWidget from "./HamburgerWidget";
+import SearchModal from "./modals/SearchModal";
 
 
 const CampusMap = () => {
@@ -38,6 +39,7 @@ const CampusMap = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isNextClassModalVisible, setIsNextClassModalVisible] = useState<boolean>(false);
   const [viewEatingOnCampus, setViewEatingOnCampus] = useState<boolean>(false);
+  const [searchBarVisible, setSearchBarVisible] = useState<boolean>(false);
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
   const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
@@ -137,6 +139,12 @@ const CampusMap = () => {
       fetchRouteWithDestination(selectedBuilding.coordinates[0]);
     }
   }, [selectedBuilding, fetchRouteWithDestination]);
+
+
+  // Handle closing search modal
+  const onCloseSearchModal = useCallback(() => {
+    setSearchBarVisible(false);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -242,6 +250,18 @@ const CampusMap = () => {
         }
       />
 
+      {/* Search Modal -- Shows up when Navigate is pressed */}
+      <SearchModal
+        visible={searchBarVisible}
+        onClose={onCloseSearchModal}
+        onSelectBuilding={(building) => {
+          setSelectedBuilding(building);
+          setSearchBarVisible(false);
+        }}
+        buildings={buildings}
+        markers={markers}
+      />
+
       <NextClassModal
         visible={isNextClassModalVisible}
         onClose={() => setIsNextClassModalVisible(false)}
@@ -252,7 +272,8 @@ const CampusMap = () => {
       <NavTab
         campus={campus}
         selectedBuilding={selectedBuilding}
-        onNavigatePress={fetchRoute}
+        // onNavigatePress={fetchRoute}
+        onNavigatePress={() => setSearchBarVisible(true)}
         onTravelPress={() => fetchRouteWithDestination(initialRegion[campus])}
         onEatPress={() => setViewEatingOnCampus((prevValue) => !prevValue)}
         onNextClassPress={() => setIsNextClassModalVisible(true)}

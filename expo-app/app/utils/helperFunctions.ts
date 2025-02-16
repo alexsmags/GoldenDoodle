@@ -16,6 +16,6 @@ export const getFillColorWithOpacity = (
     };
     rgbaColor = hexToRgb(fillColor);
   }
-  const opacity = building.id === selectedBuilding?.id ? 0.8 : 0.4;
+  const opacity = building.id === selectedBuilding?.id ? 1 : 0.4;
   return rgbaColor.replace(/[\d\.]+\)$/, `${opacity})`);
 };
