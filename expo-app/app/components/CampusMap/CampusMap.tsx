@@ -178,6 +178,7 @@ const CampusMap = () => {
                 fillColor={getFillColorWithOpacity(building, selectedBuilding)}
                 strokeColor={building.strokeColor}
                 strokeWidth={2}
+                tappable={true}
                 onPress={handleBuildingPressed(building)}
               />
             ))}
