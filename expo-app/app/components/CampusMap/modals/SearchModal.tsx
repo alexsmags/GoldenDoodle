@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { Building, CustomMarker } from '@/app/utils/types'; 
+import { Building, CustomMarkerType } from '@/app/utils/types'; 
 
 interface SearchBarModalProps {
   visible: boolean;
   onClose: () => void;
   buildings: Building[];
   onSelectBuilding: (building: Building) => void;
-  markers: CustomMarker[];
+  markers: CustomMarkerType[];
 }
 
 const SearchBarModal: React.FC<SearchBarModalProps> = ({

@@ -49,7 +49,8 @@ export const styles = StyleSheet.create({
     borderTopColor: "#e0e0e0",
   },
   navigateButton: {
-    backgroundColor: "#007AFF",
+    // backgroundColor: "#007AFF",
+    backgroundColor: "rgba(145, 35, 56, 1)",
     borderRadius: 8,
     padding: 12,
     alignItems: "center",

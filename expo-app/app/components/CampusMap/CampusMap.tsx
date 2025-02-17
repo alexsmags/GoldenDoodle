@@ -11,7 +11,7 @@ import {
 } from "./data/customMarkerData";
 import NavTab from "./CampusMapNavTab";
 import * as Location from "expo-location";
-import { Building, Coordinates } from "../../utils/types";
+import { Building, Coordinates, CustomMarkerType } from "../../utils/types";
 import BuildingInfoModal from "./modals/BuildingInfoModal";
 import { getFillColorWithOpacity } from "../../utils/helperFunctions";
 import { eatingOnCampusData } from "./data/eatingOnCampusData";
@@ -104,10 +104,24 @@ const CampusMap = () => {
   );
 
   // Handle marker press to set destination
-  const handleMarkerPress = useCallback((coordinate: Coordinates) => {
-    // console.log("Setting destination:", coordinate);
-    setDestination(coordinate);
-  }, []);
+  const handleMarkerPress = (marker: CustomMarkerType) => {
+    console.log("Marker pressed:", marker); 
+    // setDestination(marker.coordinate);
+
+    const makerToBuilding : Building = {
+      id: marker.id,
+      name: marker.title,
+      description: marker.description,
+      coordinates: [marker.coordinate],
+      strokeColor: "blue",
+      fillColor: "rgba(0, 0, 255, 0.5)",
+      campus: "SGW",
+    };
+
+    setSelectedBuilding(makerToBuilding);
+    setIsModalVisible(true);
+
+  };
 
   // Toggle between SGW and Loyola campuses
   const toggleCampus = useCallback(() => {
@@ -167,7 +181,7 @@ const CampusMap = () => {
                 coordinate={marker.coordinate}
                 title={marker.title}
                 description={marker.description}
-                onPress={() => handleMarkerPress(marker.coordinate)}
+                onPress={() => handleMarkerPress(marker)}
               />
             ))}
 
@@ -197,7 +211,7 @@ const CampusMap = () => {
                 title={marker.title}
                 description={marker.description}
                 isFoodLocation={true} // ✅ Mark as a food location
-                onPress={() => handleMarkerPress(marker.coordinate)}
+                onPress={() => handleMarkerPress(marker)}
               />
             ))}
 
