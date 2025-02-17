@@ -1,13 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import MapView, { Polygon, Polyline, Marker } from "react-native-maps";
-import {
-  StyleSheet,
-  View,
-  Alert,
-  Switch,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { View, Alert, Text, TouchableOpacity } from "react-native";
 import CustomMarker from "./CustomMarker";
 import { SGWBuildings, LoyolaBuildings } from "./data/buildingData";
 import { getDirections } from "../../utils/directions";
@@ -25,7 +18,7 @@ import { eatingOnCampusData } from "./data/eatingOnCampusData";
 import NextClassModal from "./modals/NextClassModal";
 import HamburgerWidget from "./HamburgerWidget";
 import SearchModal from "./modals/SearchModal";
-
+import { styles } from "./CampusMap.styles";
 
 const CampusMap = () => {
   const [campus, setCampus] = useState<"SGW" | "Loyola">("SGW");
@@ -37,7 +30,8 @@ const CampusMap = () => {
     null
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [isNextClassModalVisible, setIsNextClassModalVisible] = useState<boolean>(false);
+  const [isNextClassModalVisible, setIsNextClassModalVisible] =
+    useState<boolean>(false);
   const [viewEatingOnCampus, setViewEatingOnCampus] = useState<boolean>(false);
   const [searchBarVisible, setSearchBarVisible] = useState<boolean>(false);
 
@@ -139,7 +133,6 @@ const CampusMap = () => {
       fetchRouteWithDestination(selectedBuilding.coordinates[0]);
     }
   }, [selectedBuilding, fetchRouteWithDestination]);
-
 
   // Handle closing search modal
   const onCloseSearchModal = useCallback(() => {
@@ -285,67 +278,5 @@ const CampusMap = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, position: "relative" },
-  map: { flex: 1 },
-  
-  
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    width: "90%",
-    maxWidth: 400,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  closeButton: {
-    padding: 4,
-  },
-  modalBody: {
-    padding: 16,
-  },
-  modalDescription: {
-    fontSize: 16,
-    color: "#555",
-  },
-  modalFooter: {
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
-  },
-  navigateButton: {
-    backgroundColor: "#007AFF",
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
-  },
-  navigateButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
 
 export default CampusMap;
