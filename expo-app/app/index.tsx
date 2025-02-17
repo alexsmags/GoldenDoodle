@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { 
-  View, Text, StyleSheet, TouchableOpacity, Image, Animated, Easing
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Animated,
+  Easing,
 } from "react-native";
 import { useRouter } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
@@ -10,20 +16,23 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export default function SignInScreen() {
   const router = useRouter();
-  
+
   const authContext = React.useContext(AuthContext);
 
-  if(!authContext) {
+  if (!authContext) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
 
   const { user } = authContext;
-  if (user) {
-    router.push("/screens/Home/HomePageScreen");
-  }
 
-  const { handleGoogleSignIn, handleSignInAsGuest, loading} = authContext;
-  
+  useEffect(() => {
+    if (user) {
+      router.push("/screens/Home/HomePageScreen");
+    }
+  }, [user]);
+
+  const { handleGoogleSignIn, handleSignInAsGuest, loading } = authContext;
+
   const animation1 = useRef(new Animated.Value(0)).current;
   const animation2 = useRef(new Animated.Value(0)).current;
   const animation3 = useRef(new Animated.Value(0)).current;
@@ -33,8 +42,18 @@ export default function SignInScreen() {
     const animateCircle = (animation: Animated.Value, duration: number) => {
       return Animated.loop(
         Animated.sequence([
-          Animated.timing(animation, { toValue: 20, duration, easing: Easing.linear, useNativeDriver: true }),
-          Animated.timing(animation, { toValue: 0, duration, easing: Easing.linear, useNativeDriver: true })
+          Animated.timing(animation, {
+            toValue: 20,
+            duration,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(animation, {
+            toValue: 0,
+            duration,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
         ])
       ).start();
     };
@@ -50,13 +69,44 @@ export default function SignInScreen() {
   return (
     <View style={styles.container}>
       <Svg style={StyleSheet.absoluteFillObject}>
-        <AnimatedCircle cx={150} cy={150} r="130" fill="#731b2b" opacity="0.6" transform={[{ translateY: animation1 }]} />
-        <AnimatedCircle cx={320} cy={375} r="100" fill="#912338" opacity="0.5" transform={[{ translateY: animation2 }]} />
-        <AnimatedCircle cx={120} cy={550} r="110" fill="#b52e45" opacity="0.4" transform={[{ translateY: animation3 }]} />
-        <AnimatedCircle cx={320} cy={750} r="130" fill="#d0465b" opacity="0.3" transform={[{ translateY: animation4 }]} />
+        <AnimatedCircle
+          cx={150}
+          cy={150}
+          r="130"
+          fill="#731b2b"
+          opacity="0.6"
+          transform={[{ translateY: animation1 }]}
+        />
+        <AnimatedCircle
+          cx={320}
+          cy={375}
+          r="100"
+          fill="#912338"
+          opacity="0.5"
+          transform={[{ translateY: animation2 }]}
+        />
+        <AnimatedCircle
+          cx={120}
+          cy={550}
+          r="110"
+          fill="#b52e45"
+          opacity="0.4"
+          transform={[{ translateY: animation3 }]}
+        />
+        <AnimatedCircle
+          cx={320}
+          cy={750}
+          r="130"
+          fill="#d0465b"
+          opacity="0.3"
+          transform={[{ translateY: animation4 }]}
+        />
       </Svg>
 
-      <Image source={require("../../expo-app/assets/images/concordia-logo.png")} style={styles.logo} />
+      <Image
+        source={require("../../expo-app/assets/images/concordia-logo.png")}
+        style={styles.logo}
+      />
 
       <View style={styles.textContainer}>
         <Text style={styles.title}>Welcome to Concordia Navigator</Text>
@@ -64,12 +114,23 @@ export default function SignInScreen() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn} activeOpacity={0.8}>
-          <Image source={require("../../expo-app/assets/images/google-logo.png")} style={styles.googleImage} />
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={handleGoogleSignIn}
+          activeOpacity={0.8}
+        >
+          <Image
+            source={require("../../expo-app/assets/images/google-logo.png")}
+            style={styles.googleImage}
+          />
           <Text style={styles.googleButtonText}>Sign in with Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.guestButton} onPress={handleSignInAsGuest} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.guestButton}
+          onPress={handleSignInAsGuest}
+          activeOpacity={0.8}
+        >
           <Text style={styles.buttonText}>Continue as Guest</Text>
         </TouchableOpacity>
       </View>
