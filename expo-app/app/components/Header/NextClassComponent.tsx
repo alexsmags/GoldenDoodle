@@ -1,95 +1,81 @@
-import { AuthContext } from "@/app/contexts/AuthContext";
+import React, { useEffect, useState } from "react";
+import { Text } from "react-native"; 
 import { GoogleCalendarEvent } from "@/app/utils/types";
-import React from "react";
-import { Text } from "react-native"; // Make sure you import Text for displaying the message
-import { fetchSameDayCalendarEvents } from "@/app/services/GoogleCalendar/fetchingUserCalendarData"; // Assuming the function is exported here
 
-export default function NextClassComponent({ style }: { style?: any }) {
-  const auth = React.useContext(AuthContext);
-  const user = auth?.user || null; // Check if the user is logged in
-  const [nextClass, setNextClass] = React.useState<GoogleCalendarEvent | null>(
-    null
-  );
-  const [timeUntilNextClass, setTimeUntilNextClass] = React.useState<
-    string | null
-  >(null);
+interface NextClassComponentProps {
+  calendarEvents: GoogleCalendarEvent[];
+  style?: any;
+}
 
-  React.useEffect(() => {
-    const getNextClassData = async () => {
-      if (!user) {
-        setNextClass(null);
-        setTimeUntilNextClass("Please login to see the next class");
-        return;
-      }
+export default function NextClassComponent({ calendarEvents, style }: NextClassComponentProps) {
+  const [nextClass, setNextClass] = useState<GoogleCalendarEvent | null>(null);
+  const [timeUntilNextClass, setTimeUntilNextClass] = useState<string | null>(null);
 
-      try {
-        // Fetch events for the same day
-        const events = await fetchSameDayCalendarEvents();
-        if (events.length > 0) {
-          // Get the next class event
-          const upcomingClass = getNextClass(events);
-          if (upcomingClass) {
-            setNextClass(upcomingClass);
-            const timeDiff = getTimeUntilClass(upcomingClass.start.dateTime);
-            setTimeUntilNextClass(timeDiff);
-          } else {
-            setNextClass(null);
-            setTimeUntilNextClass("No upcoming classes for today.");
-          }
-        } else {
-          setNextClass(null);
-          setTimeUntilNextClass("No events available.");
-        }
-      } catch (error) {
-        setNextClass(null);
-        setTimeUntilNextClass("Error fetching class data.");
-      }
-    };
+  useEffect(() => {
+    if (!calendarEvents || calendarEvents.length === 0) {
+      setNextClass(null);
+      setTimeUntilNextClass("No classes scheduled for today.");
+      return;
+    }
 
-    getNextClassData();
-  }, [user]);
+    const upcomingOrOngoingClass = getNextClass(calendarEvents);
+    if (upcomingOrOngoingClass) {
+      setNextClass(upcomingOrOngoingClass);
+      const timeDiff = getTimeUntilClass(
+        upcomingOrOngoingClass.start.dateTime,
+        upcomingOrOngoingClass.end.dateTime
+      );
+      setTimeUntilNextClass(timeDiff);
+    } else {
+      setNextClass(null);
+      setTimeUntilNextClass("No classes scheduled for today.");
+    }
+  }, [calendarEvents]); 
 
-  // Function to calculate time until the class in hours or minutes
-  const getTimeUntilClass = (startTime: string): string => {
+  const getTimeUntilClass = (startTime: string, endTime: string): string => {
     const now = new Date();
     const classStart = new Date(startTime);
+    const classEnd = new Date(endTime);
+
+    if (classStart <= now && classEnd > now) {
+      return `Class is ongoing (Started at ${classStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`;
+    }
 
     const timeDiffMs = classStart.getTime() - now.getTime();
-    const timeDiffMinutes = Math.max(Math.floor(timeDiffMs / (1000 * 60)), 0); // Ensure positive time
+    const timeDiffMinutes = Math.floor(timeDiffMs / (1000 * 60));
 
-    if (timeDiffMinutes >= 60) {
-      const timeDiffHours = Math.floor(timeDiffMinutes / 60);
-      return `Next class in ${timeDiffHours} hours`;
+    if (timeDiffMinutes <= 0) {
+      return `Class started ${Math.abs(timeDiffMinutes)} minutes ago`;
+    } else if (timeDiffMinutes < 60) {
+      return `Next class in ${timeDiffMinutes} minutes at ${classStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     } else {
-      return `Next class in ${timeDiffMinutes} minutes`;
+      return `Next class in ${Math.floor(timeDiffMinutes / 60)} hours at ${classStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
   };
 
-  // Function to get the next class from the filtered events
-  const getNextClass = (
-    events: GoogleCalendarEvent[]
-  ): GoogleCalendarEvent | null => {
+  const getNextClass = (events: GoogleCalendarEvent[]): GoogleCalendarEvent | null => {
     const now = new Date();
-    const futureEvents = events.filter((event) => {
+    
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0); 
+    
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999); 
+    
+    const todayEvents = events.filter((event) => {
       const eventStart = new Date(event.start.dateTime);
-      return eventStart > now; // Only events in the future
+      const eventEnd = new Date(event.end.dateTime);
+      return (eventStart >= now || (eventStart <= now && eventEnd > now)) && eventStart <= endOfDay;
     });
 
-    // Sort by start time to get the earliest future event
-    return (
-      futureEvents.sort(
-        (a, b) =>
-          new Date(a.start.dateTime).getTime() -
-          new Date(b.start.dateTime).getTime()
-      )[0] || null
-    );
+    if (todayEvents.length === 0) return null;
+
+    return todayEvents.sort((a, b) => new Date(a.start.dateTime).getTime() - new Date(b.start.dateTime).getTime())[0];
   };
 
   return (
     <Text style={style}>
-      {nextClass && timeUntilNextClass !== null
-        ? `${timeUntilNextClass} (${nextClass.summary})`
-        : timeUntilNextClass}
+      {nextClass && timeUntilNextClass ? `${timeUntilNextClass} (${nextClass.summary})` : timeUntilNextClass}
     </Text>
   );
 }

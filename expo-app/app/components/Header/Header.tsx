@@ -1,19 +1,23 @@
 import React from "react";
-import { View, Text, ImageBackground, TouchableOpacity } from "react-native";
+import { View, Text, ImageBackground, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import styles from "./Header.styles";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import NextClassComponent from "./NextClassComponent";
+import { GoogleCalendarEvent } from "@/app/utils/types"; // Import event type
 
+interface HeaderProps {
+  refreshCalendarEvents: () => void;
+  isLoading: boolean;
+  calendarEvents: GoogleCalendarEvent[];
+}
 
-export default function Header(): JSX.Element {
+export default function Header({ refreshCalendarEvents, isLoading, calendarEvents }: HeaderProps) {
   const router = useRouter();
   const auth = React.useContext(AuthContext);
-
   const user = auth?.user || null;
   const signOut = auth?.signOut;
- 
 
   return (
     <ImageBackground
@@ -24,41 +28,36 @@ export default function Header(): JSX.Element {
 
       {/* Header Row for Icons */}
       <View style={styles.headerTopRow}>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={!user ? () => router.push("/") : signOut}
-        >
-          {!user ? (
-            <Feather name="log-in" size={22} color="white" />
+        <TouchableOpacity style={styles.logoutButton} onPress={!user ? () => router.push("/") : signOut}>
+          <Feather name={!user ? "log-in" : "log-out"} size={22} color="white" />
+        </TouchableOpacity>
+
+        {/* Refresh Button */}
+        <TouchableOpacity style={styles.refreshButton} onPress={refreshCalendarEvents}>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
           ) : (
-            <Feather name="log-out" size={22} color="white" />
+            <Feather name="refresh-ccw" size={22} color="white" />
           )}
         </TouchableOpacity>
 
-        {/* Hamburger Menu */}
-        <TouchableOpacity
-          style={styles.menuButton}
-          onPress={() => router.push("/screens/Home/HomeMenuScreen")}
-        >
+        <TouchableOpacity style={styles.menuButton} onPress={() => router.push("/screens/Home/HomeMenuScreen")}>
           <Feather name="menu" size={26} color="white" />
         </TouchableOpacity>
       </View>
 
-      {/* Text & Buttons */}
+      {/* Header Content */}
       <View style={styles.headerContent}>
         <Text style={styles.welcomeText}>
           {user?.displayName ? `Welcome Back, ${user.displayName}` : "Welcome!"}
         </Text>
-        <NextClassComponent style={styles.timerText}/>
+        <NextClassComponent calendarEvents={calendarEvents} style={styles.timerText} />
 
-        {/* Optimize Route Button */}
         <TouchableOpacity style={styles.routeButton}>
           <Text style={styles.routeButtonText}>Optimize Route</Text>
         </TouchableOpacity>
 
-        <Text style={styles.studySpotText}>
-          Find your next study spot or coffee stop.
-        </Text>
+        <Text style={styles.studySpotText}>Find your next study spot or coffee stop.</Text>
       </View>
     </ImageBackground>
   );
