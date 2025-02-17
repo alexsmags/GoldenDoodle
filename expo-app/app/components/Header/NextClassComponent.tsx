@@ -31,28 +31,28 @@ export default function NextClassComponent({ calendarEvents, style }: NextClassC
       setTimeUntilNextClass("No classes scheduled for today.");
     }
   }, [calendarEvents]); 
-
+  
   const getTimeUntilClass = (startTime: string, endTime: string): string => {
     const now = new Date();
     const classStart = new Date(startTime);
     const classEnd = new Date(endTime);
-
+  
     if (classStart <= now && classEnd > now) {
       return `Class is ongoing (Started at ${classStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`;
     }
-
+  
     const timeDiffMs = classStart.getTime() - now.getTime();
     const timeDiffMinutes = Math.floor(timeDiffMs / (1000 * 60));
-
+  
     if (timeDiffMinutes <= 0) {
       return `Class started ${Math.abs(timeDiffMinutes)} minutes ago`;
-    } else if (timeDiffMinutes < 60) {
+    } else if (timeDiffMinutes < 60 || timeDiffMinutes === 60) { 
       return `Next class in ${timeDiffMinutes} minutes at ${classStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     } else {
       return `Next class in ${Math.floor(timeDiffMinutes / 60)} hours at ${classStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
   };
-
+  
   const getNextClass = (events: GoogleCalendarEvent[]): GoogleCalendarEvent | null => {
     const now = new Date();
     
