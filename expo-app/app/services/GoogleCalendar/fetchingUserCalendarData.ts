@@ -45,7 +45,7 @@ const fetchGoogleCalendarEvents24HoursMax = async (
     }
 
     const data = await response.json();
-    console.log("Google Calendar Data:", data.items);
+    // console.log("Google Calendar Data:", data.items);
     return data.items || [];
   } catch (error) {
     console.error("Google Calendar Fetch Error:", error);
@@ -94,7 +94,7 @@ const fetchGoogleCalendarEvents7SevenDaysMax = async (
     }
 
     const data = await response.json();
-    console.log("Google Calendar Data:", data.items);
+    // console.log("Google Calendar Data:", data.items);
     return data.items || [];
   } catch (error) {
     console.error("Google Calendar Fetch Error:", error);
