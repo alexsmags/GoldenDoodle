@@ -17,7 +17,7 @@ import { getFillColorWithOpacity } from "../../utils/helperFunctions";
 import { eatingOnCampusData } from "./data/eatingOnCampusData";
 import NextClassModal from "./modals/NextClassModal";
 import HamburgerWidget from "./HamburgerWidget";
-import SearchModal from "./modals/SearchModal";
+import SearchModal from "./modals/NavigateModal";
 import { styles } from "./CampusMap.styles";
 
 const CampusMap = () => {
@@ -34,6 +34,8 @@ const CampusMap = () => {
     useState<boolean>(false);
   const [viewEatingOnCampus, setViewEatingOnCampus] = useState<boolean>(false);
   const [searchBarVisible, setSearchBarVisible] = useState<boolean>(false);
+
+  const [isSelectingDestination, setIsSelectingDestination] = useState<boolean>(false); // Used for allowing user to select any destination on map
 
   const markers = campus === "SGW" ? SGWMarkers : LoyolaMarkers;
   const buildings = campus === "SGW" ? SGWBuildings : LoyolaBuildings;
@@ -104,9 +106,7 @@ const CampusMap = () => {
   );
 
   // Handle marker press to set destination
-  const handleMarkerPress = (marker: CustomMarkerType) => {
-    console.log("Marker pressed:", marker); 
-    // setDestination(marker.coordinate);
+  const handleMarkerPress = useCallback((marker: CustomMarkerType) => {
 
     const makerToBuilding : Building = {
       id: marker.id,
@@ -121,7 +121,7 @@ const CampusMap = () => {
     setSelectedBuilding(makerToBuilding);
     setIsModalVisible(true);
 
-  };
+  }, []);
 
   // Toggle between SGW and Loyola campuses
   const toggleCampus = useCallback(() => {
@@ -153,6 +153,16 @@ const CampusMap = () => {
     setSearchBarVisible(false);
   }, []);
 
+  // Handle map press
+  const handleMapPress = (event:any) => {
+    if (isSelectingDestination) {
+      const { latitude, longitude } = event.nativeEvent.coordinate;
+      setDestination({ latitude, longitude });
+      setIsSelectingDestination(false); // Exit selection mode
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       {/* Movable Hamburger Widget */}
@@ -171,6 +181,7 @@ const CampusMap = () => {
         loadingEnabled={true}
         scrollEnabled={true}
         zoomEnabled={true}
+        onLongPress={(event : any ) => handleMapPress(event)}
       >
         {viewCampusMap && (
           <>
@@ -267,6 +278,9 @@ const CampusMap = () => {
         }}
         buildings={buildings}
         markers={markers}
+        onPressSelectOnMap={() => {setIsSelectingDestination(true); onCloseSearchModal();}}
+        destination={destination}
+        onGetDirections={() => {fetchRoute(); onCloseSearchModal();}}
       />
 
       <NextClassModal

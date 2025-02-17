@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { Building, CustomMarkerType } from '@/app/utils/types'; 
+import { Building, Coordinates, CustomMarkerType } from "@/app/utils/types";
 
 interface SearchBarModalProps {
   visible: boolean;
@@ -16,6 +16,9 @@ interface SearchBarModalProps {
   buildings: Building[];
   onSelectBuilding: (building: Building) => void;
   markers: CustomMarkerType[];
+  onPressSelectOnMap: () => void;
+  destination: Coordinates | null ;
+  onGetDirections: () => void;  
 }
 
 const SearchBarModal: React.FC<SearchBarModalProps> = ({
@@ -24,6 +27,9 @@ const SearchBarModal: React.FC<SearchBarModalProps> = ({
   buildings,
   onSelectBuilding,
   markers,
+  onPressSelectOnMap,
+  destination,
+  onGetDirections,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredBuildings, setFilteredBuildings] = useState<Building[]>([]);
@@ -76,6 +82,20 @@ const SearchBarModal: React.FC<SearchBarModalProps> = ({
               </TouchableOpacity>
             )}
           />
+          {/* Select on map button */}
+          {!destination ? (<TouchableOpacity
+            style={styles.selectOnMapButton}
+            onPress={onPressSelectOnMap}
+          >
+            <Text style={styles.selectOnMapText}>Select on Map</Text>
+          </TouchableOpacity>) : (
+            <TouchableOpacity
+            style={styles.selectOnMapButton}
+            onPress={onGetDirections}
+          >
+            <Text style={styles.selectOnMapText}>Get Directions</Text>
+          </TouchableOpacity>
+          )}
 
           {/* Close Button */}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -130,6 +150,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   closeButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  selectOnMapButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "rgba(145, 35, 56, 1)",
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  selectOnMapText: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
