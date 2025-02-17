@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { useRouter } from "expo-router";
+import { fetchCalendarEvents } from "@/app/services/GoogleCalendar/fetchingUserCalendarData";
+import { GoogleCalendarEvent } from "../utils/types";
 
 interface AuthContextType {
   user: FirebaseAuthTypes.User | null;
@@ -11,6 +13,7 @@ interface AuthContextType {
   handleGoogleSignIn: () => Promise<void>;
   signOut: () => Promise<void>;
   handleSignInAsGuest: () => Promise<void>;
+  googleCalendarEvents: GoogleCalendarEvent[];
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -20,11 +23,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [googleCalendarEvents, setGoogleCalendarEvents] = useState<
+    GoogleCalendarEvent[]
+  >([]); // 👈 Add state for Google Calendar events -- will add type safety
 
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
         "259837654437-eo18pu30v9grv1i3dog8ba5i64ipj1q7.apps.googleusercontent.com",
+      scopes: ["https://www.googleapis.com/auth/calendar.readonly"], // 👈 Request Google Calendar permission
     });
   }, []);
 
@@ -61,19 +68,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe(); // Unsubscribe when component unmounts
   }, []);
 
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    async function fetchGCData() {
+      const events = await fetchCalendarEvents();
+      setGoogleCalendarEvents(events);
+    }
+    fetchGCData();
+  }, [user]);
+
   // Google Sign-In function
   const handleGoogleSignIn = async () => {
     try {
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       });
+
       const signInResponse = await GoogleSignin.signIn();
-      const tokens = await GoogleSignin.getTokens();
-      const idToken = tokens.idToken ?? null;
+      const { idToken, accessToken } = await GoogleSignin.getTokens();
+      // console.log("accessToken", accessToken);
 
       if (!idToken) {
-        console.error("Google Sign-In failed: No ID Token received.");
-        return;
+        throw new Error("Google Sign-In failed: No ID Token received.");
+      }
+
+      if (!accessToken) {
+        throw new Error("Google Sign-In failed: No Access Token received.");
       }
 
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
@@ -85,6 +107,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         "user",
         JSON.stringify(userCredential.user) || ""
       );
+
+      await AsyncStorage.setItem("googleAccessToken", accessToken);
+
       router.replace("/screens/Home/HomePageScreen");
     } catch (error) {
       console.error("Google Sign-In Error:", error);
@@ -97,20 +122,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Sign out function
   const signOut = async () => {
-    var i = 0;
     try {
       await GoogleSignin.revokeAccess();
-      i++;
       await GoogleSignin.signOut();
-      i++;
       await auth().signOut();
-      i++;
       await AsyncStorage.removeItem("user");
-      i++;
       setUser(null);
       router.replace("/");
     } catch (error) {
-      console.error("Logout Error:", error, "wwe", i);
+      console.error("Logout Error:", error);
     }
   };
 
@@ -123,6 +143,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         handleGoogleSignIn,
         signOut,
         handleSignInAsGuest,
+        googleCalendarEvents,
       }}
     >
       {children}

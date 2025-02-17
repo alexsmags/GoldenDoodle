@@ -4,6 +4,8 @@ import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import styles from "./Header.styles";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import NextClassComponent from "./NextClassComponent";
+
 
 export default function Header(): JSX.Element {
   const router = useRouter();
@@ -11,9 +13,9 @@ export default function Header(): JSX.Element {
 
   const user = auth?.user || null;
   const signOut = auth?.signOut;
+ 
 
   return (
-    
     <ImageBackground
       source={require("../../../assets/images/header-background.jpg")}
       style={styles.background}
@@ -47,9 +49,7 @@ export default function Header(): JSX.Element {
         <Text style={styles.welcomeText}>
           {user?.displayName ? `Welcome Back, ${user.displayName}` : "Welcome!"}
         </Text>
-        <Text style={styles.timerText}>
-          You have 13 minutes until your next class
-        </Text>
+        <NextClassComponent style={styles.timerText}/>
 
         {/* Optimize Route Button */}
         <TouchableOpacity style={styles.routeButton}>
