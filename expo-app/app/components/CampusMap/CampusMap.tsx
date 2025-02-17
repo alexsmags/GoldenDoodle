@@ -220,7 +220,7 @@ const CampusMap = () => {
           <Polyline
             coordinates={routeCoordinates}
             strokeWidth={4}
-            strokeColor="blue"
+            strokeColor="rgba(145, 35, 56, 1)"
           />
         )}
         {/* Render Destination Marker */}
