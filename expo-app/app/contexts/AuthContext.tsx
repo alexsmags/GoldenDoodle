@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { fetchCalendarEvents } from "@/app/services/GoogleCalendar/fetchingUserCalendarData";
 import { GoogleCalendarEvent } from "../utils/types";
 
-interface AuthContextType {
+export interface AuthContextType {
   user: FirebaseAuthTypes.User | null;
   setUser: React.Dispatch<React.SetStateAction<FirebaseAuthTypes.User | null>>;
   loading: boolean;
