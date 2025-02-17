@@ -38,7 +38,7 @@ const NextClassModal: React.FC<NextClassModalProps> = ({
         const nextClassLocation = JSON.parse(events[0].location || "{}");
 
         setLocation(nextClassLocation);
-        console.log("Next Classssd:", nextClassLocation);
+        // console.log("Next Classssd:", nextClassLocation);
       };
     };
 
