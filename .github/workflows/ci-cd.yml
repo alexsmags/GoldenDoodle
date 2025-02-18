@@ -50,9 +50,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('expo-app/package-lock.json') }}
+          key: node-cache-${{ runner.os }}-${{ hashFiles('expo-app/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            node-cache-${{ runner.os }}-
   
       - name: Install Dependencies
         run: |
