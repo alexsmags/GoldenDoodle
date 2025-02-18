@@ -93,13 +93,16 @@ jobs:
     
         - name: Install Expo CLI
           run: npm install -g expo-cli
-    
+
+        - name: Install EAS CLI
+          run: npm install -g eas-cli
+
         - name: Install Dependencies
           run: npm install
           working-directory: expo-app
   
         - name: Build Expo App (Android)
-          run: expo build:android -t apk
+          run: eas build --platform android --profile production --non-interactive
           working-directory: expo-app
     
         - name: Run RobinTest UI Tests
