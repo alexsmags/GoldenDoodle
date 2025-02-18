@@ -104,6 +104,9 @@ jobs:
         - name: Build Expo App (Android)
           run: eas build --platform android --profile production --non-interactive
           working-directory: expo-app
+          env:
+            EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
     
         - name: Run RobinTest UI Tests
           run: |
