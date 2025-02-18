@@ -99,7 +99,23 @@ jobs:
         run: npm install -g eas-cli
   
       - name: Build Expo App (Android)
-        run: eas build --platform android --profile production --non-interactive
+        run: eas build --platform android --profile production --non-interactive --no-wait
+        working-directory: expo-app
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      
+      - name: Wait for EAS Build to Finish
+        run: |
+          echo "Waiting for EAS Build to complete..."
+          BUILD_ID=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].id')
+          
+          if [ "$BUILD_ID" = "null" ]; then
+            echo "❌ No build found. Exiting."
+            exit 1
+          fi
+          
+          echo "Build ID: $BUILD_ID"
+          eas build:wait --build-id "$BUILD_ID"
         working-directory: expo-app
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
@@ -107,15 +123,25 @@ jobs:
       - name: Download APK from EAS
         run: |
           BUILD_URL=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].artifacts.buildUrl')
+          
+          if [ "$BUILD_URL" = "null" ]; then
+            echo "❌ No valid build URL found. Exiting."
+            exit 1
+          fi
+      
+          echo "Downloading APK from: $BUILD_URL"
           curl -o expo-app/build/app-release.apk "$BUILD_URL"
+        working-directory: expo-app
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       
       - name: Verify APK File Exists
         run: |
           if [ ! -f "expo-app/build/app-release.apk" ]; then
-            echo "APK file not found at expo-app/build/app-release.apk"
+            echo "❌ APK file not found at expo-app/build/app-release.apk"
             exit 1
           else
-            echo "APK file found, proceeding with upload"
+            echo "✅ APK file found, proceeding with upload"
           fi
       
       - name: Upload APK to RobinTest
@@ -123,13 +149,6 @@ jobs:
           curl -X POST "https://api.robintest.com/v1/tests/run" \
           -H "Authorization: Bearer ${{ secrets.ROBINTEST_API_KEY }}" \
           -F "file=@expo-app/build/app-release.apk"
-
-  
-      - name: Run Maestro Tests on RobinTest
-        run: |
-          curl -X POST "https://api.robintest.com/v1/projects/proj_01jmd518fqekdr49b9mwgc41h1/maestro-tests" \
-          -H "Authorization: Bearer ${{ secrets.ROBINTEST_API_KEY }}"
-
           
 
   sonarqube:
