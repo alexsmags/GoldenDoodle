@@ -103,12 +103,27 @@ jobs:
         working-directory: expo-app
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-  
+      
+      - name: Download APK from EAS
+        run: |
+          BUILD_URL=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].artifacts.buildUrl')
+          curl -o expo-app/build/app-release.apk "$BUILD_URL"
+      
+      - name: Verify APK File Exists
+        run: |
+          if [ ! -f "expo-app/build/app-release.apk" ]; then
+            echo "APK file not found at expo-app/build/app-release.apk"
+            exit 1
+          else
+            echo "APK file found, proceeding with upload"
+          fi
+      
       - name: Upload APK to RobinTest
         run: |
           curl -X POST "https://api.robintest.com/v1/tests/run" \
           -H "Authorization: Bearer ${{ secrets.ROBINTEST_API_KEY }}" \
           -F "file=@expo-app/build/app-release.apk"
+
   
       - name: Run Maestro Tests on RobinTest
         run: |
