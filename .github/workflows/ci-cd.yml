@@ -97,43 +97,50 @@ jobs:
   
       - name: Install EAS CLI
         run: npm install -g eas-cli
-  
-      - name: Build Expo App (Android)
+
+      - name: Start EAS Build (Android)
         run: eas build --platform android --profile production --non-interactive --no-wait
         working-directory: expo-app
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-      
-      - name: Wait for EAS Build to Finish
+
+      - name: Wait for EAS Build to Complete
         run: |
-          echo "Waiting for EAS Build to complete..."
-          BUILD_ID=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].id')
+          echo "⏳ Waiting for the EAS Build to complete..."
           
-          if [ "$BUILD_ID" = "null" ]; then
+          # Retrieve the latest build ID
+          BUILD_ID=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].id')
+      
+          if [[ -z "$BUILD_ID" || "$BUILD_ID" == "null" ]]; then
             echo "❌ No build found. Exiting."
             exit 1
           fi
+      
+          echo "🔄 Waiting for build to complete. Build ID: $BUILD_ID"
           
-          echo "Build ID: $BUILD_ID"
           eas build:wait --build-id "$BUILD_ID"
         working-directory: expo-app
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       
-      - name: Download APK from EAS
+      - name: Get APK Download URL
         run: |
           BUILD_URL=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].artifacts.buildUrl')
-          
-          if [ "$BUILD_URL" = "null" ]; then
+      
+          if [[ -z "$BUILD_URL" || "$BUILD_URL" == "null" ]]; then
             echo "❌ No valid build URL found. Exiting."
             exit 1
           fi
       
-          echo "Downloading APK from: $BUILD_URL"
-          curl -o expo-app/build/app-release.apk "$BUILD_URL"
+          echo "✅ Build complete! APK available at: $BUILD_URL"
+          echo "BUILD_URL=$BUILD_URL" >> $GITHUB_ENV
         working-directory: expo-app
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      
+      - name: Download APK from EAS
+        run: curl -o expo-app/build/app-release.apk "$BUILD_URL"
+        working-directory: expo-app
       
       - name: Verify APK File Exists
         run: |
@@ -143,14 +150,14 @@ jobs:
           else
             echo "✅ APK file found, proceeding with upload"
           fi
-      
+   
       - name: Upload APK to RobinTest
         run: |
           curl -X POST "https://api.robintest.com/v1/tests/run" \
           -H "Authorization: Bearer ${{ secrets.ROBINTEST_API_KEY }}" \
           -F "file=@expo-app/build/app-release.apk"
-          
 
+          
   sonarqube:
     needs: [jest-tests, maestro-tests]
     runs-on: ubuntu-latest
