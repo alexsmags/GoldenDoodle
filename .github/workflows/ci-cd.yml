@@ -98,7 +98,7 @@ jobs:
             -Dsonar.test.inclusions=expo-app/__tests__/**/*.test.{js,ts,tsx}
             -Dsonar.exclusions=expo-app/node_modules/**,expo-app/coverage/**,expo-app/__tests__/**
             -Dsonar.javascript.lcov.reportPaths=expo-app/coverage/lcov.info
-            -Dsonar.tests=expo-app/__tests__
+            -Dsonar.tests=expo-app/**/__tests__
 
   deploy:
     needs: [sonarqube]
